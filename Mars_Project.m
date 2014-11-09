@@ -161,10 +161,9 @@ Rad_LMO = 1.2*marsRadius; %m -- chosen height for LMO
 vinf_vec = v_vector_difference(alphaT_toMars(oT),alphaM,eT_toMars(oT),marsEccen,oT,marsPeriLong,G*sunMass,theta_a);
 vinf = sqrt(vinf_vec(1)^2 + vinf_vec(2)^2);
 
-delta_v(current_burn) = sqrt(2*G*marsMass/Rad_LMO + vinf^2) - sqrt(G*marsMass/Rad_LMO);
-current_burn = current_burn + 1;
+delta_v(current_burn++) = sqrt(2*G*marsMass/Rad_LMO + vinf^2) - sqrt(G*marsMass/Rad_LMO);
 
-currentDay = currentDay + periTimeDiff_Transfer_days;
+currentDay += periTimeDiff_Transfer_days;
 marsArrival = datestr(currentDay) %Output the date and time for mars arrival
 
 %Mass Estimates for LMO:
@@ -174,8 +173,14 @@ Isp = 462; % RL10B-2 engine Isp -- pretty good!
 Mratio = exp(-sum(delta_v)/(Isp*g0));
 massPayloadToMars = massInital*Mratio; %kg
 
-totalDays = dayDifference(leoDeparture, marsArrival)
+totalDays = dayDifference(leoDeparture, marsArrival);
+totalYears = totalDays/365;
+integerYears = cast(totalYears,'int16');
+integerDays = cast(mod(totalDays,365),'int16');
+integerSeconds = cast(mod(totalDays,365*24*3600),'int16');
 
-massPayloadToMars
+totalTravelTime = strcat(num2str(integerYears),' years,  ',num2str(integerDays),' days')
+
+massPayloadToMarsString = strcat(num2str(massPayloadToMars),' kg')
 Reqd_Mass = requiredMass(3,totalDays)
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
