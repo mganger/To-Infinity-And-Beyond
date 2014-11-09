@@ -179,8 +179,8 @@ integerYears = cast(totalYears,'int16');
 integerDays = cast(mod(totalDays,365),'int16');
 integerSeconds = cast(mod(totalDays,365*24*3600),'int16');
 
-totalTravelTime = strcat(num2str(integerYears),' years,  ',num2str(integerDays),' days')
+totalTravelTime = strcat(num2str(integerYears),' years,',num2str(integerDays),' days')
 
-massPayloadToMarsString = strcat(num2str(massPayloadToMars),' kg')
-Reqd_Mass = requiredMass(3,totalDays)
+massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
+Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
