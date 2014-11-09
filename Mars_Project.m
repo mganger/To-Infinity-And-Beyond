@@ -75,14 +75,15 @@ theta = linspace(0,2*pi,1000);
 rE = @(th) meterToAu(alphaE./(1+earthEccen*cos(th-earthPeriLong)));
 rM = @(th) meterToAu(alphaM./(1+marsEccen*cos(th-marsPeriLong)));
 
-%figure(1)
-%	plot(rE(theta).*cos(theta),rE(theta).*sin(theta),'k-',rM(theta).*cos(theta),rM(theta).*sin(theta),'b-',0,0,'k.',...
-%	  rE(thetaE_i)*cos(thetaE_i),rE(thetaE_i)*sin(thetaE_i),'ko',rM(thetaM_i)*cos(thetaM_i),rM(thetaM_i)*sin(thetaM_i),'bo');
-%	title('Earth and Mars Orbits (Heliocentric)');
-%	axis('equal');
-%	xlabel('x (au) - aligned with vernal equinox');
-%	ylabel('y (au)');
-%	legend('Earth Orbit','Mars Orbit','Sun Location','Initial Earth Location','Initial Mars Location');
+figure(1,'visible','off')
+	plot(rE(theta).*cos(theta),rE(theta).*sin(theta),'k-',rM(theta).*cos(theta),rM(theta).*sin(theta),'b-',0,0,'k.',...
+	  rE(thetaE_i)*cos(thetaE_i),rE(thetaE_i)*sin(thetaE_i),'ko',rM(thetaM_i)*cos(thetaM_i),rM(thetaM_i)*sin(thetaM_i),'bo');
+	title('Earth and Mars Orbits (Heliocentric)');
+	axis('equal');
+	xlabel('x (au) - aligned with vernal equinox');
+	ylabel('y (au)');
+	legend('Earth Orbit','Mars Orbit','Sun Location','Initial Earth Location','Initial Mars Location');
+	print("out1.pdf")
 
 current_burn = 1; %Integer counter for the current burn number.
 
@@ -94,7 +95,7 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
 theta_d = thetaE_i + pi;     %Wait about 6 months -- may want to adjust
-theta_a = theta_d + 1.95*pi;  %May want to adjust
+theta_a = theta_d + 1.3*pi;  %May want to adjust
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
@@ -113,23 +114,24 @@ periTimeDiff_Transfer_days = RHS/(24*3600) %Total travel time on the transfer ar
 %Transcendental equation for oT:
 periTimeDiff_function = @(oT) (time_integral(G*sunMass,alphaT_toMars(oT),eT_toMars(oT),oT,theta_d,theta_a) - RHS);
 
-%figure(2)
-%	vec = linspace(0,pi,100);
-%	plot(vec,periTimeDiff_function(vec));
-%	xlabel('oT');
-%	ylabel('Delta T Function (want zero)');
-%	axis([0, pi, -2e7, 1e8])
+figure(2,'visible','off')
+	vec = linspace(0,pi,100);
+	plot(vec,periTimeDiff_function(vec));
+	xlabel('oT');
+	ylabel('Delta T Function (want zero)');
+	axis([0, pi, -2e7, 1e8])
+	print("out2.pdf")
 
-%guess(1) = input('Enter a lower bound on the value of oT: ');
-%guess(2) = input('Enter an upper bound on the value of oT: ');
+guess(1) = input('Enter a lower bound on the value of oT: ');
+guess(2) = input('Enter an upper bound on the value of oT: ');
 
-guess = [1.25,1.5]
+%guess = [1.25,1.5]
 
 [oT,f,info] = fzero(periTimeDiff_function,guess,options);
 info
 
 %The radius of the transfer arc in au:
-rT = @(theta) au_by_m*alphaT_toMars(oT)./(1 + eT_toMars(oT).*cos(theta - oT));
+rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + eT_toMars(oT).*cos(theta - oT)));
 
 %Part 2 -- plan hyperbolic escape:
 %required velocity as r -> infinity from hyperbolic escape
@@ -139,19 +141,20 @@ delta_v(current_burn) = sqrt(2*G*earthMass/Rad_LEO + vinf^2) - sqrt(G*earthMass/
 current_burn = current_burn + 1;
 
 %Transfer to Mars:
-%figure(3)
-%	tE = linspace(0,2*pi,100); %Show full revolution for Earth
-%	tM = linspace(thetaM_T_departs,theta_a,100);
-%	tT = linspace(theta_d,theta_a,1000);
-%	plot(rE(tE).*cos(tE),rE(tE).*sin(tE),'k-',...
-%	     rM(tM).*cos(tM),rM(tM).*sin(tM),'b-',0,0,'k.',...
-%	     rT(tT).*cos(tT),rT(tT).*sin(tT),'k-.',...
-%	     rE(theta_d)*cos(theta_d),rE(theta_d)*sin(theta_d),'ko',...
-%	     rM(theta_a)*cos(theta_a),rM(theta_a)*sin(theta_a),'bo');
-%	title('Earth to Mars Transfer (Heliocentric)');
-%	axis('equal'); xlabel('x (au) - aligned with vernal equinox'); ylabel('y (au)');
-%	legend('Earth Orbit','Mars Orbit','Sun Location','Transfer Orbit','Departure Location','Arrival Location',...
-%	'Location','southwest'); %This last part places the legend in the lower left corner of the plot.
+figure(3,'visible','off')
+	tE = linspace(0,2*pi,100); %Show full revolution for Earth
+	tM = linspace(thetaM_T_departs,theta_a,100);
+	tT = linspace(theta_d,theta_a,1000);
+	plot(rE(tE).*cos(tE),rE(tE).*sin(tE),'k-',...
+	     rM(tM).*cos(tM),rM(tM).*sin(tM),'b-',0,0,'k.',...
+	     rT(tT).*cos(tT),rT(tT).*sin(tT),'k-.',...
+	     rE(theta_d)*cos(theta_d),rE(theta_d)*sin(theta_d),'ko',...
+	     rM(theta_a)*cos(theta_a),rM(theta_a)*sin(theta_a),'bo');
+	title('Earth to Mars Transfer (Heliocentric)');
+	axis('equal'); xlabel('x (au) - aligned with vernal equinox'); ylabel('y (au)');
+	legend('Earth Orbit','Mars Orbit','Sun Location','Transfer Orbit','Departure Location','Arrival Location',...
+	'Location','southwest'); %This last part places the legend in the lower left corner of the plot.
+	print("out3.pdf")
 
 %Burn #3 to transfer to LMO from Hyperbolic Approach -- Radius = 1.2*marsRadius
 Rad_LMO = 1.2*marsRadius; %m -- chosen height for LMO
