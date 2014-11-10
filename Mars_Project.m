@@ -5,6 +5,9 @@ function success = Mars_Project(thetaA,thetaD)
 %clear all; clc; close all; format long eng; more off; 
 %addpath('helper_functions')
 %Note: "more off" allows the script to scroll all the way to the end.
+clear all; clc; close all; format long eng; more off; 
+addpath('helper_functions')
+source('helper_functions/engine.m')
 
 %---------------------------------------------------------
 %When using fsolve/fzero, use the following:
@@ -95,6 +98,7 @@ leoRadius = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaEarthInit,thetaD);
 currentDay += periTimeDiff_seconds/(3600*24); %Find departure time from LEO
+
 leoDeparture = datestr(currentDay)
 %Find location of Mars at that time:
 thetaMarsTransferDepart = fsolve(@(thet) (periTimeDiff_seconds - time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaMarsInit,thet)), 0.1, options); 
