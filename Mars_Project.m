@@ -1,3 +1,5 @@
+function success = Mars_Project(thetaA,thetaD)
+thetaD = thetaD
 %Dr. Kurt Aikens, November 2014 
 %Preliminary Earth-Mars Transfer Calculations
 %Mechanics I
@@ -62,14 +64,13 @@ currentDay = earthPeriapsis;
 periTimeDiff = (earthPeriapsis - marsPeriapsis)*24*3600;
 
 %True anomalies on January 4th, 2015:
-TAE_i = 0; %At periapsis for Earth.
+anomalyEarthInit = 0; %At periapsis for Earth.
 %Find Mars location for the instant that Earth is at periapsis (happens after Mars):
-[TAM_i,f,info] = fsolve( @(theta_2) periTimeDiff - time_integral(G*sunMass,alphaM,marsEccen,0,0,theta_2), 0.2, options);
-info
+anomalyMarsInit = fsolve( @(angle) periTimeDiff - time_integral(G*sunMass,alphaM,marsEccen,0,0,angle), 0.2, options);
 
 %True longitudes (angle from vernal equinox) at epoch:
-thetaE_i = TAE_i + earthPeriLong;
-thetaM_i = TAM_i + marsPeriLong;
+thetaE_i = anomalyEarthInit + earthPeriLong;
+thetaM_i = anomalyMarsInit + marsPeriLong;
 
 theta = linspace(0,2*pi,1000);
 rE = @(th) meterToAu(alphaE./(1+earthEccen*cos(th-earthPeriLong)));
@@ -95,10 +96,10 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
 %tuning = 0;
-%theta_d = thetaE_i + 6*pi + tuning;     %Wait about 6 months -- may want to adjust
-%theta_a = theta_d + 4*pi + tuning;  %May want to adjust
+%thetaD = thetaE_i + 6*pi + tuning;     %Wait about 6 months -- may want to adjust
+%thetaA = thetaD + 4*pi + tuning;  %May want to adjust
 
-periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
+periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,thetaD);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
 leoDeparture = datestr(currentDay)
 %Find location of Mars at that time:
@@ -106,14 +107,18 @@ leoDeparture = datestr(currentDay)
 info
 
 %Eccentricity and semilatus rectum for the transfer arc:
-eT_toMars = @(oT) (rM(theta_a)-rE(theta_d))./(rE(theta_d).*cos(theta_d-oT) - rM(theta_a).*cos(theta_a-oT));
-alphaT_toMars = @(oT) auToMeter(rE(theta_d).*(eT_toMars(oT).*cos(theta_d-oT) + 1));
+transferEccen = @(oT) (rM(thetaA)-rE(thetaD))./(rE(thetaD).*cos(thetaD-oT) - rM(thetaA).*cos(thetaA-oT));
+alphaT_toMars = @(oT) auToMeter(rE(thetaD).*(transferEccen(oT).*cos(thetaD-oT) + 1));
+
+
 
 %Need to use time to find omega_T (oT). The right-hand side (only based on Earth and Mars orbits):
-RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaM_i,theta_a) - time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
+RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaM_i,thetaA) - time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,thetaD);
 periTimeDiff_Transfer_days = RHS/(24*3600) %Total travel time on the transfer arc
 %Transcendental equation for oT:
-periTimeDiff_function = @(oT) (time_integral(G*sunMass,alphaT_toMars(oT),eT_toMars(oT),oT,theta_d,theta_a) - RHS);
+periTimeDiff_function = @(oT) (time_integral(G*sunMass,alphaT_toMars(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
+
+
 
 figure(2,'visible','off')
 	vec = linspace(0,pi,100);
@@ -123,14 +128,16 @@ figure(2,'visible','off')
 	axis([0, pi, -2e7, 1e8])
 	print("out2.pdf")
 
+
+
 oT = hzero(periTimeDiff_function)
 
 %The radius of the transfer arc in au:
-rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + eT_toMars(oT).*cos(theta - oT)));
+rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + transferEccen(oT).*cos(theta - oT)));
 
 %Part 2 -- plan hyperbolic escape:
 %required velocity as r -> infinity from hyperbolic escape
-vinf_vec = v_vector_difference(alphaE,alphaT_toMars(oT),earthEccen,eT_toMars(oT),earthPeriLong,oT,G*sunMass,theta_d);
+vinf_vec = v_vector_difference(alphaE,alphaT_toMars(oT),earthEccen,transferEccen(oT),earthPeriLong,oT,G*sunMass,thetaD);
 vinf = sqrt( vinf_vec(1)^2 + vinf_vec(2)^2 );
 delta_v(current_burn) = sqrt(2*G*earthMass/Rad_LEO + vinf^2) - sqrt(G*earthMass/Rad_LEO); %Req'd delta_v
 current_burn = current_burn + 1;
@@ -138,13 +145,13 @@ current_burn = current_burn + 1;
 %Transfer to Mars:
 figure(3,'visible','off')
 	tE = linspace(0,2*pi,100); %Show full revolution for Earth
-	tM = linspace(thetaM_T_departs,theta_a,100);
-	tT = linspace(theta_d,theta_a,1000);
+	tM = linspace(thetaM_T_departs,thetaA,100);
+	tT = linspace(thetaD,thetaA,1000);
 	plot(rE(tE).*cos(tE),rE(tE).*sin(tE),'k-',...
 	     rM(tM).*cos(tM),rM(tM).*sin(tM),'b-',0,0,'k.',...
 	     rT(tT).*cos(tT),rT(tT).*sin(tT),'k-.',...
-	     rE(theta_d)*cos(theta_d),rE(theta_d)*sin(theta_d),'ko',...
-	     rM(theta_a)*cos(theta_a),rM(theta_a)*sin(theta_a),'bo');
+	     rE(thetaD)*cos(thetaD),rE(thetaD)*sin(thetaD),'ko',...
+	     rM(thetaA)*cos(thetaA),rM(thetaA)*sin(thetaA),'bo');
 	title('Earth to Mars Transfer (Heliocentric)');
 	axis('equal'); xlabel('x (au) - aligned with vernal equinox'); ylabel('y (au)');
 	legend('Earth Orbit','Mars Orbit','Sun Location','Transfer Orbit','Departure Location','Arrival Location',...
@@ -153,7 +160,7 @@ figure(3,'visible','off')
 
 %Burn #3 to transfer to LMO from Hyperbolic Approach -- Radius = 1.2*marsRadius
 Rad_LMO = 1.2*marsRadius; %m -- chosen height for LMO
-vinf_vec = v_vector_difference(alphaT_toMars(oT),alphaM,eT_toMars(oT),marsEccen,oT,marsPeriLong,G*sunMass,theta_a);
+vinf_vec = v_vector_difference(alphaT_toMars(oT),alphaM,transferEccen(oT),marsEccen,oT,marsPeriLong,G*sunMass,thetaA);
 vinf = sqrt(vinf_vec(1)^2 + vinf_vec(2)^2);
 
 delta_v(current_burn++) = sqrt(2*G*marsMass/Rad_LMO + vinf^2) - sqrt(G*marsMass/Rad_LMO);
@@ -182,10 +189,11 @@ Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
 
 if(massPayloadToMars >= requiredMass(3,totalDays))
 	outcome = strcat('You can take ',num2str(massPayloadToMars-requiredMass(3,totalDays)),' kg of extra equipment.')
-	outcome = 'Mission Successful!'
+	outcome = 'Mission Successful!';
 
 else
 	outcome = strcat('You were overweight by ',num2str(abs(massPayloadToMars-requiredMass(3,totalDays))),' kg of extra equipment.')
-	outcome = 'Mission Failed.'
+	outcome = 'Mission Failed.';
 end
+success = outcome
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
