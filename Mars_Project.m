@@ -183,4 +183,10 @@ totalTravelTime = strcat(num2str(integerYears),' years,',num2str(integerDays),' 
 
 massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
 Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
+
+if(massPayloadToMars >= requiredMass(3,totalDays))
+	outcome = 'This mission plan is efficient enough.'
+else
+	outcome = 'You were unsucessful.'
+end
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
