@@ -94,8 +94,9 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 %Find the best departure date: consider travel time and fuel requirements
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
-theta_d = thetaE_i + pi;     %Wait about 6 months -- may want to adjust
-theta_a = theta_d + 1.3*pi;  %May want to adjust
+tuning = .80;
+theta_d = thetaE_i + 4.4*pi + tuning;     %Wait about 6 months -- may want to adjust
+theta_a = theta_d + 2.82*pi - tuning;  %May want to adjust
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
@@ -121,14 +122,23 @@ figure(2,'visible','off')
 	ylabel('Delta T Function (want zero)');
 	axis([0, pi, -2e7, 1e8])
 	print("out2.pdf")
+oT;
+f;
+info = 0;
+guess=[1.25,1.5];
+for n 0:300
+	try
+		%guess(1) = input('Enter a lower bound on the value of oT: ');
+		%guess(2) = input('Enter an upper bound on the value of oT: ');
 
-guess(1) = input('Enter a lower bound on the value of oT: ');
-guess(2) = input('Enter an upper bound on the value of oT: ');
+		guess = [n/100,(n+1)/100)]
 
-%guess = [1.25,1.5]
-
-[oT,f,info] = fzero(periTimeDiff_function,guess,options);
-info
+		[oT,f,info] = fzero(periTimeDiff_function,guess,options);
+	catch
+		outcome='try again...'
+	end
+	break
+end
 
 %The radius of the transfer arc in au:
 rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + eT_toMars(oT).*cos(theta - oT)));
@@ -185,8 +195,11 @@ massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
 Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
 
 if(massPayloadToMars >= requiredMass(3,totalDays))
-	outcome = 'This mission plan is efficient enough.'
+	outcome = strcat('You can take ',num2str(massPayloadToMars-requiredMass(3,totalDays)),' kg of extra equipment.')
+	outcome = 'Mission Successful!'
+
 else
-	outcome = 'You were unsucessful.'
+	outcome = strcat('You were overweight by ',num2str(abs(massPayloadToMars-requiredMass(3,totalDays))),' kg of extra equipment.')
+	outcome = 'Mission Failed.'
 end
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
