@@ -94,8 +94,8 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 %Find the best departure date: consider travel time and fuel requirements
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
-theta_d = thetaE_i + pi;     %Wait about 6 months -- may want to adjust
-theta_a = theta_d + 1.3*pi;  %May want to adjust
+theta_d = thetaE_i + 2*pi;     %Wait about 6 months -- may want to adjust
+theta_a = theta_d + 1.10*pi;  %May want to adjust
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
@@ -122,10 +122,10 @@ figure(2,'visible','off')
 	axis([0, pi, -2e7, 1e8])
 	print("out2.pdf")
 
-guess(1) = input('Enter a lower bound on the value of oT: ');
-guess(2) = input('Enter an upper bound on the value of oT: ');
+%guess(1) = input('Enter a lower bound on the value of oT: ');
+%guess(2) = input('Enter an upper bound on the value of oT: ');
 
-%guess = [1.25,1.5]
+guess = [1.5,3];
 
 [oT,f,info] = fzero(periTimeDiff_function,guess,options);
 info
@@ -183,4 +183,10 @@ totalTravelTime = strcat(num2str(integerYears),' years,',num2str(integerDays),' 
 
 massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
 Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
+
+if(massPayloadToMars >= requiredMass(3,totalDays))
+	outcome = 'You can take stuff there'
+else
+	outcome = 'You have too much stuff'
+end
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
