@@ -4,6 +4,9 @@
 %clear all; clc; close all; format long eng; more off; 
 %addpath('helper_functions')
 %Note: "more off" allows the script to scroll all the way to the end.
+clear all; clc; close all; format long eng; more off; 
+addpath('helper_functions')
+source('helper_functions/engine.m')
 
 %---------------------------------------------------------
 %When using fsolve/fzero, use the following:
@@ -94,9 +97,9 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 %Find the best departure date: consider travel time and fuel requirements
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
-%tuning = 0;
-%theta_d = thetaE_i + 6*pi + tuning;     %Wait about 6 months -- may want to adjust
-%theta_a = theta_d + 4*pi + tuning;  %May want to adjust
+tuning = 0;
+theta_d = thetaE_i + 2.3*pi + tuning;     %Wait about 6 months -- may want to adjust
+theta_a = theta_d + .92*pi + tuning;  %May want to adjust
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
