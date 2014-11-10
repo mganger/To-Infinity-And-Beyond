@@ -94,9 +94,9 @@ Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 %Find the best departure date: consider travel time and fuel requirements
 
 %Choose departure and arrival true longitudes (relative to vernal equinox):
-tuning = .80;
-theta_d = thetaE_i + 4.4*pi + tuning;     %Wait about 6 months -- may want to adjust
-theta_a = theta_d + 2.82*pi - tuning;  %May want to adjust
+tuning = 0;
+theta_d = thetaE_i + 2.3*pi + tuning;     %Wait about 6 months -- may want to adjust
+theta_a = theta_d + .97*pi + tuning;  %May want to adjust
 
 periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,theta_d);
 currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
@@ -122,23 +122,8 @@ figure(2,'visible','off')
 	ylabel('Delta T Function (want zero)');
 	axis([0, pi, -2e7, 1e8])
 	print("out2.pdf")
-oT;
-f;
-info = 0;
-guess=[1.25,1.5];
-for n 0:300
-	try
-		%guess(1) = input('Enter a lower bound on the value of oT: ');
-		%guess(2) = input('Enter an upper bound on the value of oT: ');
 
-		guess = [n/100,(n+1)/100)]
-
-		[oT,f,info] = fzero(periTimeDiff_function,guess,options);
-	catch
-		outcome='try again...'
-	end
-	break
-end
+oT = hzero(periTimeDiff_function)
 
 %The radius of the transfer arc in au:
 rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + eT_toMars(oT).*cos(theta - oT)));
@@ -174,6 +159,7 @@ vinf = sqrt(vinf_vec(1)^2 + vinf_vec(2)^2);
 delta_v(current_burn++) = sqrt(2*G*marsMass/Rad_LMO + vinf^2) - sqrt(G*marsMass/Rad_LMO);
 
 currentDay += periTimeDiff_Transfer_days;
+leoDeparture
 marsArrival = datestr(currentDay) %Output the date and time for mars arrival
 
 %Mass Estimates for LMO:
