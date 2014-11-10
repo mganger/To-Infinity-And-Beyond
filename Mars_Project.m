@@ -68,8 +68,8 @@ anomalyEarthInit = 0; %At periapsis for Earth.
 anomalyMarsInit = fsolve( @(angle) periTimeDiff - time_integral(G*sunMass,alphaM,marsEccen,0,0,angle), 0.2, options);
 
 %True longitudes (angle from vernal equinox) at epoch:
-thetaE_i = anomalyEarthInit + earthPeriLong;
-thetaM_i = anomalyMarsInit + marsPeriLong;
+thetaEarthInit = anomalyEarthInit + earthPeriLong;
+thetaMarsInit = anomalyMarsInit + marsPeriLong;
 
 theta = linspace(0,2*pi,1000);
 rE = @(th) meterToAu(alphaE./(1+earthEccen*cos(th-earthPeriLong)));
@@ -77,7 +77,7 @@ rM = @(th) meterToAu(alphaM./(1+marsEccen*cos(th-marsPeriLong)));
 
 figure(1,'visible','off')
 	plot(rE(theta).*cos(theta),rE(theta).*sin(theta),'k-',rM(theta).*cos(theta),rM(theta).*sin(theta),'b-',0,0,'k.',...
-	  rE(thetaE_i)*cos(thetaE_i),rE(thetaE_i)*sin(thetaE_i),'ko',rM(thetaM_i)*cos(thetaM_i),rM(thetaM_i)*sin(thetaM_i),'bo');
+	  rE(thetaEarthInit)*cos(thetaEarthInit),rE(thetaEarthInit)*sin(thetaEarthInit),'ko',rM(thetaMarsInit)*cos(thetaMarsInit),rM(thetaMarsInit)*sin(thetaMarsInit),'bo');
 	title('Earth and Mars Orbits (Heliocentric)');
 	axis('equal');
 	xlabel('x (au) - aligned with vernal equinox');
@@ -88,40 +88,34 @@ figure(1,'visible','off')
 current_burn = 1; %Integer counter for the current burn number.
 
 %Burn #1 -- Hyperbolic burn to leave LEO from 200km altitude orbit and Transfer to Mars:
-Rad_LEO = 185e3 + earthRadius; %Radius of the initial Earth orbit.
+leoRadius = 185e3 + earthRadius; %Radius of the initial Earth orbit.
 
 %Part 1 -- Transfer orbit from Earth to Mars (heliocentric).
 %Find the best departure date: consider travel time and fuel requirements
 
-%Choose departure and arrival true longitudes (relative to vernal equinox):
-%tuning = 0;
-%thetaD = thetaE_i + 6*pi + tuning;     %Wait about 6 months -- may want to adjust
-%thetaA = thetaD + 4*pi + tuning;  %May want to adjust
-
-periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,thetaD);
-currentDay = currentDay + periTimeDiff_seconds/(3600*24); %Find departure time from LEO
+periTimeDiff_seconds = time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaEarthInit,thetaD);
+currentDay += periTimeDiff_seconds/(3600*24); %Find departure time from LEO
 leoDeparture = datestr(currentDay)
 %Find location of Mars at that time:
-[thetaM_T_departs,f,info] = fsolve(@(thet) (periTimeDiff_seconds - time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaM_i,thet)), 0.1, options); 
-info
+thetaMarsTransferDepart = fsolve(@(thet) (periTimeDiff_seconds - time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaMarsInit,thet)), 0.1, options); 
 
 %Eccentricity and semilatus rectum for the transfer arc:
 transferEccen = @(oT) (rM(thetaA)-rE(thetaD))./(rE(thetaD).*cos(thetaD-oT) - rM(thetaA).*cos(thetaA-oT));
-alphaT_toMars = @(oT) auToMeter(rE(thetaD).*(transferEccen(oT).*cos(thetaD-oT) + 1));
+transferAlpha = @(oT) auToMeter(rE(thetaD).*(transferEccen(oT).*cos(thetaD-oT) + 1));
 
 
 
 %Need to use time to find omega_T (oT). The right-hand side (only based on Earth and Mars orbits):
-RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaM_i,thetaA) - time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaE_i,thetaD);
-periTimeDiff_Transfer_days = RHS/(24*3600) %Total travel time on the transfer arc
+RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaMarsInit,thetaA) - time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaEarthInit,thetaD);
+transferTravelTime = RHS/(24*3600) %Total travel time on the transfer arc
 %Transcendental equation for oT:
-periTimeDiff_function = @(oT) (time_integral(G*sunMass,alphaT_toMars(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
+omegaT = @(oT) (time_integral(G*sunMass,transferAlpha(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
 
 
 
 figure(2,'visible','off')
 	vec = linspace(0,pi,100);
-	plot(vec,periTimeDiff_function(vec));
+	plot(vec,omegaT(vec));
 	xlabel('oT');
 	ylabel('Delta T Function (want zero)');
 	axis([0, pi, -2e7, 1e8])
@@ -129,22 +123,22 @@ figure(2,'visible','off')
 
 
 
-oT = hzero(periTimeDiff_function)
+oT = hzero(omegaT)
 
 %The radius of the transfer arc in au:
-rT = @(theta) meterToAu(alphaT_toMars(oT)./(1 + transferEccen(oT).*cos(theta - oT)));
+rT = @(theta) meterToAu(transferAlpha(oT)./(1 + transferEccen(oT).*cos(theta - oT)));
 
 %Part 2 -- plan hyperbolic escape:
 %required velocity as r -> infinity from hyperbolic escape
-vinf_vec = v_vector_difference(alphaE,alphaT_toMars(oT),earthEccen,transferEccen(oT),earthPeriLong,oT,G*sunMass,thetaD);
-vinf = sqrt( vinf_vec(1)^2 + vinf_vec(2)^2 );
-delta_v(current_burn) = sqrt(2*G*earthMass/Rad_LEO + vinf^2) - sqrt(G*earthMass/Rad_LEO); %Req'd delta_v
-current_burn = current_burn + 1;
+velocityLimit = v_vector_difference(alphaE,transferAlpha(oT),earthEccen,transferEccen(oT),earthPeriLong,oT,G*sunMass,thetaD);
+velocityLimitMag = sqrt( velocityLimit(1)^2 + velocityLimit(2)^2 );
+delta_v(current_burn) = sqrt(2*G*earthMass/leoRadius + velocityLimitMag^2) - sqrt(G*earthMass/leoRadius); %Req'd delta_v
+current_burn += 1
 
 %Transfer to Mars:
 figure(3,'visible','off')
 	tE = linspace(0,2*pi,100); %Show full revolution for Earth
-	tM = linspace(thetaM_T_departs,thetaA,100);
+	tM = linspace(thetaMarsTransferDepart,thetaA,100);
 	tT = linspace(thetaD,thetaA,1000);
 	plot(rE(tE).*cos(tE),rE(tE).*sin(tE),'k-',...
 	     rM(tM).*cos(tM),rM(tM).*sin(tM),'b-',0,0,'k.',...
@@ -159,12 +153,12 @@ figure(3,'visible','off')
 
 %Burn #3 to transfer to LMO from Hyperbolic Approach -- Radius = 1.2*marsRadius
 Rad_LMO = 1.2*marsRadius; %m -- chosen height for LMO
-vinf_vec = v_vector_difference(alphaT_toMars(oT),alphaM,transferEccen(oT),marsEccen,oT,marsPeriLong,G*sunMass,thetaA);
-vinf = sqrt(vinf_vec(1)^2 + vinf_vec(2)^2);
+velocityLimit = v_vector_difference(transferAlpha(oT),alphaM,transferEccen(oT),marsEccen,oT,marsPeriLong,G*sunMass,thetaA);
+velocityLimitMag = sqrt(velocityLimit(1)^2 + velocityLimit(2)^2);
 
-delta_v(current_burn++) = sqrt(2*G*marsMass/Rad_LMO + vinf^2) - sqrt(G*marsMass/Rad_LMO);
+delta_v(current_burn++) = sqrt(2*G*marsMass/Rad_LMO + velocityLimitMag^2) - sqrt(G*marsMass/Rad_LMO);
 
-currentDay += periTimeDiff_Transfer_days;
+currentDay += transferTravelTime;
 leoDeparture
 marsArrival = datestr(currentDay) %Output the date and time for mars arrival
 
