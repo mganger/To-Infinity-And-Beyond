@@ -1,5 +1,4 @@
 function success = Mars_Project(thetaA,thetaD)
-thetaD = thetaD
 %Dr. Kurt Aikens, November 2014 
 %Preliminary Earth-Mars Transfer Calculations
 %Mechanics I
@@ -188,12 +187,9 @@ massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
 Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
 
 if(massPayloadToMars >= requiredMass(3,totalDays))
-	outcome = strcat('You can take ',num2str(massPayloadToMars-requiredMass(3,totalDays)),' kg of extra equipment.')
-	outcome = 'Mission Successful!';
-
+	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(massPayloadToMars-requiredMass(3,totalDays)),',',num2str(totalDays),',success!!!')
 else
-	outcome = strcat('You were overweight by ',num2str(abs(massPayloadToMars-requiredMass(3,totalDays))),' kg of extra equipment.')
-	outcome = 'Mission Failed.';
+	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(massPayloadToMars-requiredMass(3,totalDays)),',',num2str(totalDays),',failure!!!')
 end
 success = outcome
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
