@@ -175,7 +175,7 @@ massPayloadToMars = massInital*Mratio; %kg
 
 totalDays = dayDifference(leoDeparture, marsArrival);
 totalYears = totalDays/365;
-integerYears = cast(totalYears,'int16');
+integerYears = floor(totalYears);
 integerDays = cast(mod(totalDays,365),'int16');
 integerSeconds = cast(mod(totalDays,365*24*3600),'int16');
 
