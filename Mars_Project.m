@@ -5,7 +5,6 @@ function success = Mars_Project(thetaA,thetaD)
 %clear all; clc; close all; format long eng; more off; 
 %addpath('helper_functions')
 %Note: "more off" allows the script to scroll all the way to the end.
-clear all; clc; close all; format long eng; more off; 
 addpath('helper_functions')
 source('helper_functions/engine.m')
 
