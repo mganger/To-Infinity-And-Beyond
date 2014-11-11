@@ -22,7 +22,7 @@ function returnThrust = getThrust(a)
 	%	1: Two Solid Rocket Boosters	20015372.708 Newtons (per Rocket)
 	%	2: RS-25D/E Engine 		7437363.3817 Newtons
 	%	3: J-2X Engine			1310000 Newtons
-	thrust = [20015372.708 * 2,2278000 * 4,1310000];
+	thrust = [20015372.708 * 2,2278000 * 4,1310000 * 2];
 	returnThrust = thrust(cast(a,'int8'));
 endfunction
 

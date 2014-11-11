@@ -135,8 +135,7 @@ rT = @(theta) meterToAu(transferAlpha(oT)./(1 + transferEccen(oT).*cos(theta - o
 %required velocity as r -> infinity from hyperbolic escape
 velocityLimit = v_vector_difference(alphaE,transferAlpha(oT),earthEccen,transferEccen(oT),earthPeriLong,oT,G*sunMass,thetaD);
 velocityLimitMag = sqrt( velocityLimit(1)^2 + velocityLimit(2)^2 );
-delta_v(current_burn) = sqrt(2*G*earthMass/leoRadius + velocityLimitMag^2) - sqrt(G*earthMass/leoRadius); %Req'd delta_v
-current_burn += 1
+delta_v(current_burn++) = sqrt(2*G*earthMass/leoRadius + velocityLimitMag^2) - sqrt(G*earthMass/leoRadius); %Req'd delta_v
 
 %Transfer to Mars:
 figure(3,'visible','off')
