@@ -1,6 +1,8 @@
 clear all; clc; close all; format long eng; more off; 
 addpath('helper_functions')
 
+file = fopen('file.txt', 'w')
+
 for i = 0:15
 	for j = 0:20
 		for k = 0:20
@@ -9,6 +11,7 @@ for i = 0:15
 			try
 				outcome = Mars_Project(theta_a, theta_d);
 				'--------------------------'
+				save('-append','file.txt','outcome')
 			catch
 				continue;
 			end
