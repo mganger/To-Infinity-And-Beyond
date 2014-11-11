@@ -165,7 +165,7 @@ leoDeparture
 marsArrival = datestr(currentDay) %Output the date and time for mars arrival
 
 %Mass Estimates for LMO:
-massInitial = getPayload; %kg -- the amount one Delta IV Heavy can get into an orbit at 185km altitude
+massInitial = getPayload*0.101971621; %kg -- the amount one Delta IV Heavy can get into an orbit at 185km altitude
 
 Isp = getImpulse(2); % RS-25D/E engine Isp -- pretty good!
 Mratio = exp(-sum(delta_v)/(Isp*g0));
