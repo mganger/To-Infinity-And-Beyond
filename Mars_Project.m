@@ -112,13 +112,13 @@ transferAlpha = @(oT) auToMeter(rE(thetaD).*(transferEccen(oT).*cos(thetaD-oT) +
 RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaMarsInit,thetaA) - time_integral(G*sunMass,alphaE,earthEccen,earthPeriLong,thetaEarthInit,thetaD);
 transferTravelTime = RHS/(24*3600) %Total travel time on the transfer arc
 %Transcendental equation for oT:
-omegaT = @(oT) (time_integral(G*sunMass,transferAlpha(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
+marsTransferTime = @(oT) (time_integral(G*sunMass,transferAlpha(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
 
 
 
 figure(2,'visible','off')
 	vec = linspace(0,pi,100);
-	plot(vec,omegaT(vec));
+	plot(vec,marsTransferTime(vec));
 	xlabel('oT');
 	ylabel('Delta T Function (want zero)');
 	axis([0, pi, -2e7, 1e8])
@@ -126,7 +126,7 @@ figure(2,'visible','off')
 
 
 
-oT = hzero(omegaT)
+oT = hzero(marsTransferTime)
 
 %The radius of the transfer arc in au:
 rT = @(theta) meterToAu(transferAlpha(oT)./(1 + transferEccen(oT).*cos(theta - oT)));
