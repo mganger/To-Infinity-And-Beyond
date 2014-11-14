@@ -7,8 +7,8 @@ function ret = hzero(func)
 			ret = a
 			break
 		catch
-			outcome='try again...'
-			guess
+			outcome='try again...';
+			guess;
 			continue;
 		end
 	end
