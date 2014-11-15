@@ -7,10 +7,8 @@ function ret = hzero(func)
 			ret = a
 			break
 		catch
-			outcome='try again...';
-			guess;
+			if(n == 300) throw(MException)
 			continue;
 		end
 	end
-	throw(MException)
 
