@@ -13,6 +13,7 @@ for j = 0:320
 		'--------------------------'
 			save('-append','file.txt','outcome')
        		catch
+			exception = 'No transfer orbits exist at this theta_D, theta_A.'
 			continue;
 		end
 	end

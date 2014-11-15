@@ -12,4 +12,5 @@ function ret = hzero(func)
 			continue;
 		end
 	end
+	throw(MException)
 
