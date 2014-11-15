@@ -19,8 +19,11 @@ else
   %delta_t = zeros(length(alpha));
 
   for i = 1:length(alpha)
-    integrand = @(theta) (1 + epsilon(i)*cos(theta-omega(i)))^-2;
-    delta_t(1,i) = alpha(i)^(3/2)/sqrt(GM)*quad(integrand,theta1,theta2,1e-10);
+	integrand = @(theta) (1 + epsilon(i)*cos(theta-omega(i)))^-2;
+	int = 'quad'
+	delta_t(1,i) = alpha(i)^(3/2)/sqrt(GM)*quad(integrand,theta1,theta2,1e-10)
+	int = 'analytical'
+	delta_t(1,i) = alpha(i)^(3/2)/sqrt(GM)* (timeInt(epsilon,theta2-omega)-timeInt(epsilon,theta1-omega))
   end
 
 end
