@@ -7,7 +7,7 @@ function ret = timeInt(y,x)
 
 	piCount = floor(y/pi);
 	if(y/pi - piCount == 0 & y != pi)
-		ret = timeInt(y+0.000001,x)
+		ret = timeInt(y+0.000001,x);
 		return
 	end
 
