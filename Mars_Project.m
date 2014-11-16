@@ -113,20 +113,11 @@ RHS = time_integral(G*sunMass,alphaM,marsEccen,marsPeriLong,thetaMarsInit,thetaA
 transferTravelTime = RHS/(24*3600) %Total travel time on the transfer arc
 %Transcendental equation for oT:
 marsTransferTime = @(oT) (time_integral(G*sunMass,transferAlpha(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
-marsTransferTime2 = @(oT) (numerical_integral(G*sunMass,transferAlpha(oT),transferEccen(oT),oT,thetaD,thetaA) - RHS);
 
 
 figure(2,'visible','off')
 	vec = linspace(0,pi,1000);
-	subplot(2,2,1)
 	plot(vec,marsTransferTime(vec));
-	title(strcat('thetaD ::',num2str(thetaD/pi),'*pi',':: thetaA ::',num2str(thetaA/pi),'*pi'));
-	xlabel('oT');
-	ylabel('Delta T Function (want zero)');
-	axis([0, pi, -2e7, 1e8])
-
-	subplot(2,2,2)
-	plot(vec,marsTransferTime2(vec));
 	title(strcat('thetaD ::',num2str(thetaD/pi),'*pi',':: thetaA ::',num2str(thetaA/pi),'*pi'));
 	xlabel('oT');
 	ylabel('Delta T Function (want zero)');
