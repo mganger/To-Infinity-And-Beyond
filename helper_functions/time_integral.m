@@ -19,7 +19,7 @@ else
   %delta_t = zeros(length(alpha));
 
   for i = 1:length(alpha)
-	delta_t(1,i) = alpha(i)^(3/2)/sqrt(GM)* (timeInt(theta2-omega(i), epsilon(i))-timeInt(theta1-omega(i), epsilon(i)));;;;
+	delta_t(1,i) = (alpha(i)^(3/2)) / sqrt(GM)*(timeInt(theta2-omega(i), epsilon(i))-timeInt(theta1-omega(i), epsilon(i)));
   end
 
 end
