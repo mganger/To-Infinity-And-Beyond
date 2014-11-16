@@ -7,8 +7,8 @@ function ret = hzero(func)
 			ret = a
 			break
 		catch
-			if(n == 300) throw(MException)
+			if(n == 300) error('HZero Function: after 300 attempts, no root has been found');
 			continue;
 		end
 	end
-
+end
