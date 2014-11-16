@@ -1,3 +1,3 @@
 function t = timeDiff(obj,angleInit, angleFinal)
-	p = obj.semiMajor.^(3/2.0) / (sqrt(obj.bigG*obj.centerMass)) * (timeInt(angleFinal, obj.eccentricity) - timeInt(angleInit,obj.eccentricity));
+	t = obj.semiMajor.^(3/2.0) / (sqrt(obj.bigG*obj.centerMass)) * (timeInt(angleFinal, obj.eccentricity) - timeInt(angleInit,obj.eccentricity));
 end

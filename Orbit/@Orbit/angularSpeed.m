@@ -1,3 +1,3 @@
 function w = angularSpeed(obj,radius)
-	w = obj.specAngMom() / (radius*radius)
+	w = specAngMom(obj) / (radius*radius);
 end

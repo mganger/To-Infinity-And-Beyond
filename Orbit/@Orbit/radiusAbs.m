@@ -1,3 +1,3 @@
-function r = radiusAbs(obj,angle)
-	r = obj.semiLatus() / (1 + obj.eccentricity*cos(angle-obj.refAngle));
+function r = radiusAbs(obj,ang)
+	r = semiLatus(obj) / (1 + obj.eccentricity*cos(ang-obj.refAngle));
 end
