@@ -22,4 +22,5 @@ addpath('Orbit/@OrbitFactory');
 
 
 	%periapsis of mars minus periapsis of earth, in seconds
-	periTimeDiff = (datenum(2015,1,4) - datenum(2014,12,12))*24*3600;
+	periTimeDiff = (datenum(2015,1,4) - datenum(2014,12,12))*24*3600
+	marsAnomalyInit = angSolve(marsOrbit, 0, periTimeDiff)
