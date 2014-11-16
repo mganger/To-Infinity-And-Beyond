@@ -1,4 +1,4 @@
-function success = Mars_Project(thetaA,thetaD)
+function  outcome = Mars_Project(thetaA,thetaD)
 %Dr. Kurt Aikens, November 2014 
 %Preliminary Earth-Mars Transfer Calculations
 %Mechanics I
@@ -188,9 +188,9 @@ massPayloadToMarsString = strcat(num2str(massPayloadToMars,8),' kg')
 Reqd_Mass = strcat(num2str(requiredMass(3,totalDays),8),' kg')
 
 if(massPayloadToMars >= requiredMass(3,totalDays))
-	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(massPayloadToMars-requiredMass(3,totalDays)),',',num2str(totalDays),',success!!!')
+	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(totalDays))
 else
-	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(massPayloadToMars-requiredMass(3,totalDays)),',',num2str(totalDays),',failure!!!')
+	outcome = strcat(num2str(thetaA),',',num2str(thetaD),',',num2str(totalDays))
 end
-success = outcome
+return
 %Hmmm..... Going to need a lower delta_v / more mass in LEO at the beginning.
