@@ -65,3 +65,8 @@ end
 	%find mars's location at the departure angle (for the earth)
 	earthMarsMap.depart.mars = angSolve(marsOrbit, earthMarsMap.init.mars, earthMarsMap.depart.time);
 	print('Departure Angle	', earthMarsMap.depart.mars/(2*pi), ' revolutions from mars equinox');
+
+	%find the amount of time for mars to orbit between the two points
+	earthMarsMap.arrival.time = earthMarsMap.depart.time + timeDiff(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars);
+	print('Arrival Time   	', earthMarsMap.arrival.time/3600/24, ' days from earth equinox');
+	
