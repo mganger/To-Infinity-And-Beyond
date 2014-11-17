@@ -1,10 +1,10 @@
 %function to construct an orbit from two polar coordinates (r,theta*)
 %does not provide a reference angle
-function orb = fromPolarRef(fact, ci, cf)
+function orb = fromPolar(fact, ci, cf)
 	r1 = ci(1); t1 = ci(2);
 	r2 = cf(1); t2 = cf(2);
 
-	ecc = orb.eccentricity = (r2 - r1) / (r1*cos(t1-refAngle) - r2*cos(t2-refAngle));
+	ecc = orb.eccentricity = (r2 - r1) / (r1*cos(t1) - r2*cos(t2));
 	semiLatus = (r2 - r1) / (r1*cos(t1) - r2*cos(t2));
 
 	orb.semiMajor = semiLatus / (1 - ecc*ecc);
