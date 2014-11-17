@@ -8,6 +8,8 @@
 %	Transfer from LMO to hyperbolic
 %	Calculate Mars to Earth
 
+format short eng;
+
 options = optimset('TolFun',1e-8,'TolX',1e-15,'MaxIter',1000);
 addpath('Orbit/@Orbit');
 addpath('Orbit/@OrbitFactory');
