@@ -30,9 +30,10 @@ addpath('helper_functions');
 	angSolve(marsOrbit,0,vernalEquinox)
 	marsAnomalyInit = angSolve(shipOrbit, 0, 0)
 
-%	graph(marsOrbit,0,2*pi,1)
-	scatter(radiusAbs(earthOrbit,pi)*cos(pi),radiusAbs(earthOrbit,pi)*sin(pi),40,'filled');
-	graph(shipOrbit,.5*pi,1.3*pi,1)
+%	scatter(0,0,45,'filled')
+%	scatter(radiusAbs(earthOrbit,.3*pi)*cos(.3*pi),radiusAbs(earthOrbit,.3*pi)*sin(.3*pi),40);
+	pointGraph(earthOrbit,.23*pi)
+	pointGraph(marsOrbit,.5*pi)
 	graph(earthOrbit)
 	graph(marsOrbit)
 
