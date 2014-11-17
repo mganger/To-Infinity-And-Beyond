@@ -74,6 +74,10 @@ end
 
 	%construct a transfer orbit from the two known coordinates (r,theta) for the intial earth and the final mars
 	%just a system of equations from the first function
+	timeDiff = earthMarsMap.arrival.time - earthMarsMap.depart.time;
+	ci = [radius(earthOrbit, earthMarsMap.depart.ref),  earthMarsMap.depart.ref]
+	cf = [radius(marsOrbit,  earthMarsMap.arrival.ref), earthMarsMap.arrival.ref]
+	eToMtransfer = fromPolarStar(orbFact,timeDiff, ci, cf);
 
 
 	%create an orbit around the earth
