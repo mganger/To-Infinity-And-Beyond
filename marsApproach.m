@@ -13,18 +13,17 @@ addpath('Orbit/@Orbit');
 addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
 
-%step 1:
-	%transfer from earth to mars
-	sunFactory = OrbitFactory(1.98855e30, 'Sun');
+%step 2:
+	%Earth Transfer Orbit to Low Mars Orbit. (ETO to LMO)
+	sunFactory = OrbitFactory(1.98855e30,'Sun')
+	marsFactory = OrbitFactory(639e21,'Mars')
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
-	earthOrbit = fromAE(sunFactory, 149.60e6, 0.01671022, toRadians(102.93768193))
-	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935,     toRadians(336.05637041))
+	shipOrbit  = fromAE(marsFactory, 3500, 0, toRadians(336.05637041))
+	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935, toRadians(336.05637041))
 
-
-	%periapsis of mars minus periapsis of earth, in seconds
-	periTimeDiff = (datenum(2015,1,4) - datenum(2014,12,12))*24*3600
-	marsAnomalyInit = angSolve(marsOrbit, 0, periTimeDiff)
-
-	domain = linspace(0,2*pi,10000);
-	plot(domain, timeDiff(marsOrbit, 0, domain));
+	%periapsis of ship
+	print('Vernal Equinox:	',2013,'/',7,'/',13)
+	vernalEquinox = datenum(2013,7,13);
+	angSolve(marsOrbit,0,vernalEquinox)
+	marsAnomalyInit = angSolve(shipOrbit, 0, 0)
