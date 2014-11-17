@@ -8,7 +8,7 @@
 %	Transfer from LMO to hyperbolic
 %	Calculate Mars to Earth
 
-format short eng;
+format short eng; clear all; close all;
 
 options = optimset('TolFun',1e-8,'TolX',1e-15,'MaxIter',1000);
 addpath('Orbit/@Orbit');
@@ -40,7 +40,7 @@ printf('\n\n');
 
 	%arrival and departure angles (user inputed)
 	thetaD = 3;
-	thetaA = 3*pi;
+	thetaA = 3*pi+3;
 	earthMarsMap.depart.ref = thetaD;
 	earthMarsMap.arrival.ref = thetaA;
 
@@ -63,6 +63,9 @@ printf('\n\n');
 	printf('Arrival Time:    %f days from earth equinox\n', earthMarsMap.arrival.time/3600/24);
 	
 
+	%graph mars and earth's orbits (to see if the orbit is actually possible)
+	graph(earthOrbit,  earthMarsMap.init.earth + earthOrbit.refAngle, earthMarsMap.depart.ref, 1);
+	graph(marsOrbit, earthMarsMap.depart.mars + marsOrbit.refAngle, earthMarsMap.arrival.ref, 1);
 
 	%construct a transfer orbit from the two known coordinates (r,theta) for the intial earth and the final mars
 	%just a system of equations from the first function
