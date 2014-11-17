@@ -45,5 +45,3 @@ end
 	earthMarsMap.init.earth = 0;
 	earthMarsMap.init.mars = angSolve(marsOrbit, 0, periTimeDiff);
 
-	domain = linspace(0,2*pi,10000);
-	plot(domain, timeDiff(marsOrbit, 0, domain));
