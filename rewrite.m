@@ -56,3 +56,9 @@ end
 	earthMarsMap.depart.earth = relAngle(thetaD, earthOrbit);
 	earthMarsMap.arrival.mars = relAngle(thetaA, marsOrbit);
 
+
+
+	%find the time that the earth is at the desired depart angle
+	earthMarsMap.depart.time = timeDiff(earthOrbit, 0, earthMarsMap.depart.earth);
+	print('Departure Time	', earthMarsMap.depart.time/3600/24,' days from earth equinox');
+
