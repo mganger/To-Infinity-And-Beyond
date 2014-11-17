@@ -70,3 +70,14 @@ end
 	earthMarsMap.arrival.time = earthMarsMap.depart.time + timeDiff(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars);
 	print('Arrival Time   	', earthMarsMap.arrival.time/3600/24, ' days from earth equinox');
 	
+
+
+	%construct a transfer orbit from the two known coordinates (r,theta) for the intial earth and the final mars
+	%just a system of equations from the first function
+
+
+	%create an orbit around the earth
+	earthFactory = OrbitFactory(5.97219e24, 'Earth');
+	%args(factory, semiMajorAxis, Eccentrcity, angleToReference)
+	lowEarthOrbit = fromAE(earthFactory, 185e3 + 6371, 0, 0);
+	
