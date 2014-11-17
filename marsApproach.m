@@ -16,8 +16,8 @@ addpath('helper_functions');
 
 %step 2:
 	%Earth Transfer Orbit to Low Mars Orbit. (ETO to LMO)
-	sunFactory = OrbitFactory(1.98855e30,'Sun')
-	marsFactory = OrbitFactory(639e21,'Mars')
+	sunFactory = OrbitFactory(1.98855e30,'Sun');
+	marsFactory = OrbitFactory(639e21,'Mars');
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
 	shipOrbit  = fromAE(marsFactory, 3500, 0, toRadians(336.05637041));
@@ -25,15 +25,14 @@ addpath('helper_functions');
 	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935, toRadians(336.05637041));
 
 	%periapsis of ship
-	printf('Vernal Equinox: %d/%d/%d\n',2013,7,13)
+	printf('Vernal Equinox: %d/%d/%d\n',2013,7,13);
 	vernalEquinox = datenum(2013,7,13);
-	angSolve(marsOrbit,0,vernalEquinox)
-	marsAnomalyInit = angSolve(shipOrbit, 0, 0)
+	angSolve(marsOrbit,0,vernalEquinox);
+	marsAnomalyInit = angSolve(shipOrbit, 0, 0);
 
 %	scatter(0,0,45,'filled')
 %	scatter(radiusAbs(earthOrbit,.3*pi)*cos(.3*pi),radiusAbs(earthOrbit,.3*pi)*sin(.3*pi),40);
-	pointGraph(earthOrbit,.23*pi)
-	pointGraph(marsOrbit,.5*pi)
-	graph(earthOrbit)
-	graph(marsOrbit)
-
+	pointGraph(earthOrbit,.23*pi);
+	pointGraph(marsOrbit,.5*pi);
+	graph(earthOrbit);
+	graph(marsOrbit);
