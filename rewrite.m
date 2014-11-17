@@ -16,13 +16,13 @@ addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
 
 function print(a,b,c,d,e,f,g)
-	try       strcat(a,num2str(b),c,num2str(d),e,num2str(f),g)
-	catch try strcat(a,num2str(b),c,num2str(d),e,num2str(f))
-	catch try strcat(a,num2str(b),c,num2str(d),e)
-	catch try strcat(a,num2str(b),c,num2str(d))
-	catch try strcat(a,num2str(b),c)
-	catch try strcat(a,num2str(b))
-	catch try strcat(a)
+	try       Message = strcat(a,num2str(b),c,num2str(d),e,num2str(f),g)
+	catch try Message = strcat(a,num2str(b),c,num2str(d),e,num2str(f))
+	catch try Message = strcat(a,num2str(b),c,num2str(d),e)
+	catch try Message = strcat(a,num2str(b),c,num2str(d))
+	catch try Message = strcat(a,num2str(b),c)
+	catch try Message = strcat(a,num2str(b))
+	catch try Message = strcat(a)
 	end end end end end end end
 end
 
