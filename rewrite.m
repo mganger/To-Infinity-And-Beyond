@@ -13,6 +13,17 @@ addpath('Orbit/@Orbit');
 addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
 
+function print(a,b,c,d,e,f,g)
+	try       strcat(a,num2str(b),c,num2str(d),e,num2str(f),g)
+	catch try strcat(a,num2str(b),c,num2str(d),e,num2str(f))
+	catch try strcat(a,num2str(b),c,num2str(d),e)
+	catch try strcat(a,num2str(b),c,num2str(d))
+	catch try strcat(a,num2str(b),c)
+	catch try strcat(a,num2str(b))
+	catch try strcat(a)
+	end end end end end end end
+end
+
 %step 1:
 	%transfer from earth to mars
 	sunFactory = OrbitFactory(1.98855e30, 'Sun');
