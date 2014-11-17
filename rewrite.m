@@ -31,8 +31,11 @@ end
 	sunFactory = OrbitFactory(1.98855e30, 'Sun');
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
-	earthOrbit = fromAE(sunFactory, 149.60e6, 0.01671022, toRadians(102.93768193))
-	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935,     toRadians(336.05637041))
+	earthOrbit = fromAE(sunFactory, 149.60e9, 0.01671022, toRadians(102.93768193));
+	marsOrbit  = fromAE(sunFactory, 227.92e9, 0.0935,     toRadians(336.05637041));
+
+	%map the earth angles to the mars angles
+	earthMarsMap = struct;
 
 
 	%periapsis of mars minus periapsis of earth, in seconds
