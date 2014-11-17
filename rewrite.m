@@ -15,16 +15,8 @@ addpath('Orbit/@Orbit');
 addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
 
-function print(a,b,c,d,e,f,g)
-	try       Message = strcat(a,num2str(b),c,num2str(d),e,num2str(f),g)
-	catch try Message = strcat(a,num2str(b),c,num2str(d),e,num2str(f))
-	catch try Message = strcat(a,num2str(b),c,num2str(d),e)
-	catch try Message = strcat(a,num2str(b),c,num2str(d))
-	catch try Message = strcat(a,num2str(b),c)
-	catch try Message = strcat(a,num2str(b))
-	catch try Message = strcat(a)
-	end end end end end end end
-end
+try timeInt(); catch end
+printf('\n\n');
 
 %step 1:
 	%transfer from earth to mars
@@ -48,7 +40,7 @@ end
 
 	%arrival and departure angles (user inputed)
 	thetaD = 3;
-	thetaA = pi+5;
+	thetaA = 3*pi;
 	earthMarsMap.depart.ref = thetaD;
 	earthMarsMap.arrival.ref = thetaA;
 
@@ -60,24 +52,25 @@ end
 
 	%find the time that the earth is at the desired depart angle
 	earthMarsMap.depart.time = timeDiff(earthOrbit, 0, earthMarsMap.depart.earth);
-	print('Departure Time	', earthMarsMap.depart.time/3600/24,' days from earth equinox');
+	printf('Departure Time: %.0f days from earth equinox\n', earthMarsMap.depart.time/3600/24);
 
 	%find mars's location at the departure angle (for the earth)
 	earthMarsMap.depart.mars = angSolve(marsOrbit, earthMarsMap.init.mars, earthMarsMap.depart.time);
-	print('Departure Angle	', earthMarsMap.depart.mars/(2*pi), ' revolutions from mars equinox');
+	printf('Departure Angle: %.2f revolutions from mars equinox\n', earthMarsMap.depart.mars/(2*pi));
 
 	%find the amount of time for mars to orbit between the two points
 	earthMarsMap.arrival.time = earthMarsMap.depart.time + timeDiff(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars);
-	print('Arrival Time   	', earthMarsMap.arrival.time/3600/24, ' days from earth equinox');
+	printf('Arrival Time:    %f days from earth equinox\n', earthMarsMap.arrival.time/3600/24);
 	
 
 
 	%construct a transfer orbit from the two known coordinates (r,theta) for the intial earth and the final mars
 	%just a system of equations from the first function
 	timeDiff = earthMarsMap.arrival.time - earthMarsMap.depart.time;
-	ci = [radius(earthOrbit, earthMarsMap.depart.ref),  earthMarsMap.depart.ref]
-	cf = [radius(marsOrbit,  earthMarsMap.arrival.ref), earthMarsMap.arrival.ref]
-	eToMtransfer = fromPolarStar(orbFact,timeDiff, ci, cf);
+	ci = [radiusAbs(earthOrbit, earthMarsMap.depart.ref),  earthMarsMap.depart.ref];
+	cf = [radiusAbs(marsOrbit,  earthMarsMap.arrival.ref), earthMarsMap.arrival.ref];
+	eToMorb= fromPolarRef(sunFactory,timeDiff, ci, cf);
+	printf('The trip will take %.0f days', timeDiff/3600/24);
 
 
 	%create an orbit around the earth
