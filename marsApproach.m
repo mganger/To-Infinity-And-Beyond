@@ -19,7 +19,7 @@ addpath('helper_functions');
 	marsFactory = OrbitFactory(639e21,'Mars')
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
-	shipOrbit  = fromAE(marsFactory, 3500, 0, toRadians(336.05637041))
+	shipOrbit  = fromAE(marsFactory, 3500, .5, toRadians(336.05637041))
 	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935, toRadians(336.05637041))
 
 	%periapsis of ship
@@ -27,3 +27,6 @@ addpath('helper_functions');
 	vernalEquinox = datenum(2013,7,13);
 	angSolve(marsOrbit,0,vernalEquinox)
 	marsAnomalyInit = angSolve(shipOrbit, 0, 0)
+
+	graph(shipOrbit,2*pi,1)
+	graph(marsOrbit,0,pi,1)

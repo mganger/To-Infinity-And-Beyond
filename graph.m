@@ -1,27 +1,23 @@
-clear all;close all;clc;
-addpath('Orbit/@Orbit');
-addpath('Orbit/@OrbitFactory');
-addpath('helper_functions');
+function ret = graph(orbit,theta1,theta2,figureNum)
 
-domain = linspace(0,3*pi,1000);
+try 
+figureNum == pi
+catch
+figureNum = 1;
+end
 
-radius = @(th) 1./(1+1*cos(th)); 
+try
+	domain = linspace(theta1,theta2,1000);
+catch
+	domain = linspace(0,2*pi,1000);
+end
 	
-	marsFactory = OrbitFactory(639e21,'Mars');
-	sunFactory = OrbitFactory(1.98855e30,'Sun')
-
-	shipOrbit  = fromAE(sunFactory, 3500, .9, 1.3*pi)
-	shipOrbit2  = fromAE(marsFactory, 3500, .9, 1.3*pi)
-
 for i = 1:length(domain)
-	rad(i) = radiusAbs(shipOrbit,domain(i));
+	rad(i) = radiusAbs(orbit,domain(i));
+	rad2(i) = radiusAbs(orbit,domain(i));
 end
 
-for i = 1:length(domain)
-	rad2(i) = radiusAbs(shipOrbit2,domain(i));
-end
-
-figure(1)
+figure(figureNum)
+	hold on
 	polar(domain,rad);
-figure(2)
-	polar(domain,rad2);
+end
