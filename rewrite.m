@@ -45,3 +45,14 @@ end
 	earthMarsMap.init.earth = 0;
 	earthMarsMap.init.mars = angSolve(marsOrbit, 0, periTimeDiff);
 
+
+	%arrival and departure angles (user inputed)
+	thetaD = 3;
+	thetaA = pi+5;
+	earthMarsMap.depart.ref = thetaD;
+	earthMarsMap.arrival.ref = thetaA;
+
+	%find the eqivalent earth and mars angles for above reference angles
+	earthMarsMap.depart.earth = relAngle(thetaD, earthOrbit);
+	earthMarsMap.arrival.mars = relAngle(thetaA, marsOrbit);
+
