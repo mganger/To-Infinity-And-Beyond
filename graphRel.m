@@ -1,10 +1,10 @@
-function ret = graph(orbit,theta1,theta2,figureNum)
+function ret = graphRel(orbit,theta1,theta2,figureNum)
 
 try figureNum == pi
 catch figureNum = 1;
 end
 
-try domain = linspace(theta1,theta2,1000);
+try domain = linspace(absAngle(theta1, orbit),absAngle(theta2,orbit),1000);
 catch domain = linspace(0,2*pi,1000);
 end
 	
@@ -13,7 +13,7 @@ for i = 1:length(domain)
 end
 
 %make a polar plot of the semimajor axis
-%xdomain = linspace(-1,1,10).*orbit.semiMajor;
+xdomain = linspace(-1,1,10).*orbit.semiMajor;
 
 figure(figureNum)
 	hold on;
