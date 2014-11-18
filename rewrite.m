@@ -117,7 +117,18 @@ printf('\n\n');
 	%graph the transfer orbit on
 	earthMarsMap
 	%eToMorb
-	%graph(eToMorb, earthMarsMap.depart.ref, earthMarsMap.arrival.ref, 1);
+
+	%graph(earthOrbit, absAngle(earthMarsMap.init.earth, earthOrbit), absAngle(earthMarsMap.arrival.earth, earthOrbit), 1);
+	graphRel(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars, 1);
+
+	%mars and earth location at departure
+	pointGraphRel(earthOrbit, earthMarsMap.depart.earth, 10);
+	pointGraphRel(marsOrbit,  earthMarsMap.depart.mars, 10);
+
+	%mars and earth location at arrival
+	pointGraphRel(earthOrbit, earthMarsMap.arrival.earth);
+	pointGraphRel(marsOrbit,  earthMarsMap.arrival.mars);
+	graph(eToMorb, earthMarsMap.depart.ref, earthMarsMap.arrival.ref, 1);
 
 
 	%create an orbit around the earth
