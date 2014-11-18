@@ -38,11 +38,20 @@ printf('\n\n');
 	earthMarsMap.init.mars = angSolve(marsOrbit, 0, periTimeDiff);
 
 
+
+
+
 	%arrival and departure angles (user inputed)
-	thetaD = 3;
-	thetaA = 3*pi+3;
+	thetaD = .2*pi;
+	thetaA = 0.7*pi;
+	while(thetaD < earthOrbit.refAngle) thetaD += 2*pi; end;
+	while(thetaA < thetaD) thetaA += 2*pi; end;
 	earthMarsMap.depart.ref = thetaD;
 	earthMarsMap.arrival.ref = thetaA;
+
+
+
+
 
 	%find the eqivalent earth and mars angles for above reference angles
 	earthMarsMap.depart.earth = relAngle(thetaD, earthOrbit);
@@ -50,30 +59,55 @@ printf('\n\n');
 
 
 
+
+
+
 	%find the time that the earth is at the desired depart angle
 	earthMarsMap.depart.time = timeDiff(earthOrbit, 0, earthMarsMap.depart.earth);
-	printf('Departure Time: %.0f days from earth equinox\n', earthMarsMap.depart.time/3600/24);
+	printf('Departure Time:  %.0f days from earth equinox\n', earthMarsMap.depart.time/3600/24);
 
-	%find mars's location at the departure angle (for the earth)
+
+
+
+	%find mars's location at the departure angle (for the earth); make sure that the arrival angle is greater than the departure angle
 	earthMarsMap.depart.mars = angSolve(marsOrbit, earthMarsMap.init.mars, earthMarsMap.depart.time);
-	printf('Departure Angle: %.2f revolutions from mars equinox\n', earthMarsMap.depart.mars/(2*pi));
+	while(earthMarsMap.arrival.mars < earthMarsMap.depart.mars) earthMarsMap.arrival.mars += 2*pi; end;
+	printf('Departure Angle: %.2f revolutions from ref\n', earthMarsMap.depart.ref/(2*pi));
+	printf('Arrival Angle:   %.2f revolutions from ref\n', earthMarsMap.arrival.ref/(2*pi));
+
+
+
 
 	%find the amount of time for mars to orbit between the two points
 	earthMarsMap.arrival.time = earthMarsMap.depart.time + timeDiff(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars);
-	printf('Arrival Time:    %f days from earth equinox\n', earthMarsMap.arrival.time/3600/24);
+	printf('Arrival Time:    %0.f days from departure\n', (earthMarsMap.arrival.time - earthMarsMap.depart.time)/3600/24);
 	
 
+
+
+
 	%graph mars and earth's orbits (to see if the orbit is actually possible)
-	graph(earthOrbit,  earthMarsMap.init.earth + earthOrbit.refAngle, earthMarsMap.depart.ref, 1);
-	graph(marsOrbit, earthMarsMap.depart.mars + marsOrbit.refAngle, earthMarsMap.arrival.ref, 1);
+	graph(earthOrbit,  absAngle(earthMarsMap.depart.earth, earthOrbit), earthMarsMap.arrival.ref, 1);
+	graph(marsOrbit,   absAngle(earthMarsMap.depart.mars, marsOrbit), earthMarsMap.arrival.ref, 1);
+
+
+
 
 	%construct a transfer orbit from the two known coordinates (r,theta) for the intial earth and the final mars
 	%just a system of equations from the first function
 	timeDiff = earthMarsMap.arrival.time - earthMarsMap.depart.time;
 	ci = [radiusAbs(earthOrbit, earthMarsMap.depart.ref),  earthMarsMap.depart.ref];
 	cf = [radiusAbs(marsOrbit,  earthMarsMap.arrival.ref), earthMarsMap.arrival.ref];
-	eToMorb= fromPolarRef(sunFactory,timeDiff, ci, cf);
-	printf('The trip will take %.0f days', timeDiff/3600/24);
+	%eToMorb= fromPolarRef(sunFactory, timeDiff, ci, cf);
+	%printf('The trip will take %.0f days\n', timeDiff/3600/24);
+
+
+
+
+	%graph the transfer orbit on
+	earthMarsMap
+	%eToMorb
+	%graph(eToMorb, earthMarsMap.depart.ref, earthMarsMap.arrival.ref, 1);
 
 
 	%create an orbit around the earth
