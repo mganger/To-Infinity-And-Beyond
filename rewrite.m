@@ -108,8 +108,8 @@ printf('\n\n');
 	timeDiff = earthMarsMap.arrival.time - earthMarsMap.depart.time;
 	ci = [radiusAbs(earthOrbit, earthMarsMap.depart.ref),  earthMarsMap.depart.ref];
 	cf = [radiusAbs(marsOrbit,  earthMarsMap.arrival.ref), earthMarsMap.arrival.ref];
-	%eToMorb= fromPolarRef(sunFactory, timeDiff, ci, cf);
-	%printf('The trip will take %.0f days\n', timeDiff/3600/24);
+	eToMorb= fromPolarRef(sunFactory, timeDiff, ci, cf);
+	printf('The trip will take %.0f days\n', timeDiff/3600/24);
 
 
 
