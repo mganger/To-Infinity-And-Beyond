@@ -20,20 +20,21 @@ addpath('helper_functions');
 	marsFactory = OrbitFactory(639e21,'Mars');
 
 	%args(factory,vinf,rmin,angleOffset)
-	hypOrbit = fromHYP(marsFactory,4828000,3500000,0);
+	%generate a hyperbolic orbit
+	hypOrbit = fromHYP(marsFactory,4828000,3500000,0)
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
-	shipOrbit  = fromAE(marsFactory,3500000, 0, toRadians(336.05637041));
-	earthOrbit = fromAE(sunFactory, 149.60e6, 0.01671022, toRadians(102.93768193));
-	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935, toRadians(336.05637041));
+	%generate a circularized orbit
+	cirOrbit = fromAE(marsFactory,3500000, 0, toRadians(336.05637041))
 
 	%periapsis of ship
 	printf('Vernal Equinox: %d/%d/%d\n',2013,7,13);
 	vernalEquinox = datenum(2013,7,13);
-	angSolve(marsOrbit,0,vernalEquinox);
-	marsAnomalyInit = angSolve(shipOrbit, 0, 0);
+	angSolve(cirOrbit,0,vernalEquinox);
+	marsAnomalyInit = angSolve(cirOrbit, 0, 0);
 
 %	pointGraph(earthOrbit,.23*pi);
-%	pointGraph(marsOrbit,.5*pi);
+%	pointGraph(cirOrbit,.5*pi);
 	graph(hypOrbit);
-	graph(shipOrbit);
+	graph(cirOrbit);
+	deltaV = hypOrbit.vmin-cirOrbit.vmin
