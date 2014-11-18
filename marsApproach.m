@@ -20,7 +20,7 @@ addpath('helper_functions');
 	marsFactory = OrbitFactory(639e21,'Mars');
 
 	%args(factory,vinf,rmin,angleOffset)
-	hypOrbit = fromHYP(marsFactory,4828000,3500000,0)
+	hypOrbit = fromHYP(marsFactory,4828000,3500000,0);
 
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
 	shipOrbit  = fromAE(marsFactory,3500000, 0, toRadians(336.05637041));
@@ -33,11 +33,7 @@ addpath('helper_functions');
 	angSolve(marsOrbit,0,vernalEquinox);
 	marsAnomalyInit = angSolve(shipOrbit, 0, 0);
 
-%	scatter(0,0,45,'filled')
-%	scatter(radiusAbs(earthOrbit,.3*pi)*cos(.3*pi),radiusAbs(earthOrbit,.3*pi)*sin(.3*pi),40);
 %	pointGraph(earthOrbit,.23*pi);
 %	pointGraph(marsOrbit,.5*pi);
-%	hypOrbit.semiMajor = -1.82954*10.^2
-	hypOrbit.eccentricity
 	graph(hypOrbit);
 	graph(shipOrbit);
