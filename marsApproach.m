@@ -40,4 +40,4 @@ addpath('helper_functions');
 %	hypOrbit.semiMajor = -1.82954*10.^2
 	hypOrbit.eccentricity
 	graph(hypOrbit);
-	raph(shipOrbit);
+	graph(shipOrbit);
