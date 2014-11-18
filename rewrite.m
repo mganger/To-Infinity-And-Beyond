@@ -73,8 +73,8 @@ printf('\n\n');
 	%find mars's location at the departure angle (for the earth); make sure that the arrival angle is greater than the departure angle
 	earthMarsMap.depart.mars = angSolve(marsOrbit, earthMarsMap.init.mars, earthMarsMap.depart.time);
 	while(earthMarsMap.arrival.mars < earthMarsMap.depart.mars) earthMarsMap.arrival.mars += 2*pi; end;
-	printf('Departure Angle: %.2f revolutions from ref\n', earthMarsMap.depart.ref/(2*pi));
-	printf('Arrival Angle:   %.2f revolutions from ref\n', earthMarsMap.arrival.ref/(2*pi));
+	printf('Departure Angle: %.2f revolutions from ref\n', earthMarsMap.depart.ref/(2*pi)  );
+	printf('Arrival Angle:   %.2f revolutions from ref\n', earthMarsMap.arrival.ref/(2*pi) );
 
 
 
@@ -82,6 +82,13 @@ printf('\n\n');
 	%find the amount of time for mars to orbit between the two points
 	earthMarsMap.arrival.time = earthMarsMap.depart.time + timeDiff(marsOrbit, earthMarsMap.depart.mars, earthMarsMap.arrival.mars);
 	printf('Arrival Time:    %0.f days from departure\n', (earthMarsMap.arrival.time - earthMarsMap.depart.time)/3600/24);
+
+
+
+
+	%find earth's location at the when the ship arrives at mars
+	earthMarsMap.arrival.earth = angSolve(earthOrbit, 0, earthMarsMap.arrival.time);
+
 	
 
 
