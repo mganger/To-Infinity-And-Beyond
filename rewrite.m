@@ -30,6 +30,7 @@ printf('\n\n');
 	earthMarsMap = struct;
 
 
+
 	%periapsis of mars minus periapsis of earth, in seconds
 	periTimeDiff = (datenum(2015,1,4) - datenum(2014,12,12))*24*3600;
 	%angle of mars in its orbit at t = 0
@@ -42,8 +43,8 @@ printf('\n\n');
 
 
 	%arrival and departure angles (user inputed)
-	thetaD = .2*pi;
-	thetaA = 0.7*pi;
+	thetaD = 3*pi-pi/2;
+	thetaA = 4*pi+0.201367*2*pi;
 	while(thetaD < earthOrbit.refAngle) thetaD += 2*pi; end;
 	while(thetaA < thetaD) thetaA += 2*pi; end;
 	earthMarsMap.depart.ref = thetaD;
