@@ -28,10 +28,13 @@ addpath('helper_functions');
 	%args(factory,vinf,rmin,angleOffset)
 	%generate a hyperbolic orbit
 %	hypOrbit = fromHYP(marsFactory,24138.9,cirOrbit.rmin,0)
-	hypOrbit = fromHYP(marsFactory,[241,241],cirOrbit.rmin,0)
+%	hypOrbit = fromHYP(marsFactory,[241,241],cirOrbit.rmin,0)
 
 	%generate mars orbit
 	marsOrbit = fromAE(sunFactory,227.92e6,0.0935,toRadians(336.05637041));
+
+	%generate landing pattern
+	landingOrbit = hohmannTransfer(cirOrbit,marsSurface,pi/2)
 
 	%periapsis of ship
 	printf('Vernal Equinox: %d/%d/%d\n',2013,7,13);
@@ -44,16 +47,18 @@ addpath('helper_functions');
 
 
 	%plot vernal equinox
-	pointGraph(cirOrbit,vernalAngle,40);
-	graph(hypOrbit);
+%	pointGraph(cirOrbit,vernalAngle,40);
+%	graph(hypOrbit);
 	graph(marsSurface)
 	graph(cirOrbit);
 	print('marsApproach.pdf')
 
-	deltaV = hypOrbit.vmin-cirOrbit.vmin
-	hypVelocity = velocity(hypOrbit,0)
-	cirVelocity = velocity(cirOrbit,0)
-	deltaV = velocity(hypOrbit,0) - velocity(cirOrbit,0)
+	graph(landingOrbit)
+
+%	deltaV = hypOrbit.vmin-cirOrbit.vmin
+%	hypVelocity = velocity(hypOrbit,0)
+%	cirVelocity = velocity(cirOrbit,0)
+%	deltaV = velocity(hypOrbit,0) - velocity(cirOrbit,0)
 
 
 
