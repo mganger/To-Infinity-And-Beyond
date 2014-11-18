@@ -95,8 +95,10 @@ printf('\n\n');
 
 
 	%graph mars and earth's orbits (to see if the orbit is actually possible)
-	graph(earthOrbit,  absAngle(earthMarsMap.depart.earth, earthOrbit), earthMarsMap.arrival.ref, 1);
-	graph(marsOrbit,   absAngle(earthMarsMap.depart.mars, marsOrbit), earthMarsMap.arrival.ref, 1);
+	figure(1, 'visible', 'off')
+	graphRel(earthOrbit,  earthMarsMap.depart.earth, earthMarsMap.arrival.earth, 1);
+	%graph(marsOrbit,   absAngle(earthMarsMap.depart.mars, marsOrbit), earthMarsMap.arrival.ref, 1);
+
 
 
 
@@ -123,3 +125,5 @@ printf('\n\n');
 	%args(factory, semiMajorAxis, Eccentrcity, angleToReference)
 	lowEarthOrbit = fromAE(earthFactory, 185e3 + 6371, 0, 0);
 	
+
+	print('graph.pdf');
