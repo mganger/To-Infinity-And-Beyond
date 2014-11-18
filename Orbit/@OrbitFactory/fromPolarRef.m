@@ -1,29 +1,29 @@
-function obj = fromPolarRef(orbFact, timeReq, ci, cf)
+function obj, tDiff = fromPolarRef(orbFact, timeReq, ci, cf, graph)
 	%optimize the polarRef function such that the amount of time between the two angles
 	%is the same as the time required
-	printf('Time required is %.0f days\n', timeReq/3600/24);
 
 	%make a function with the tmpOrb that shifts the reference angle and finds the timeDiff
 	func = @(ot) (tDiffFunction(orbFact, ot, ci, cf) - timeReq);
 
-	%graph the function
-	xDomain = linspace(0, 1*pi, 1000);
-	for n = 1:length(xDomain)
-		range(n) = func(xDomain(n));
+	try graph == 1; catch graph = 0; end
+	if(graph == 1)
+		%graph the function
+		xDomain = linspace(0, 1*pi, 1000);
+		for n = 1:length(xDomain)
+			range(n) = func(xDomain(n));
+		end
+
+		figure(2)
+			plot(xDomain, range);
+			axis([0, 1*pi, -2e7, 1e8])
 	end
-
-	figure(2)
-		plot(xDomain, range);
-		axis([0, 1*pi, -2e7, 1e8])
-
-
 
 	%optimize it; use fsolve
 	try
 		options = optimset('TolFun',1e-8,'TolX',1e-15,'MaxIter',1000,'ComplexEqn', 'off');
 		refAngle = fsolve(func, 1.5, options);
 		%refAngle = fzero(func, 1.3, 1.7, options);
-		[tmp, obj] = tDiffFunction(orbFact, refAngle, ci, cf);
+		[tDiff, obj] = tDiffFunction(orbFact, refAngle, ci, cf);
 	catch
 		error('Could not find the reference angle for the orbit');
 	end
