@@ -27,8 +27,8 @@ addpath('helper_functions');
 
 	%args(factory,vinf,rmin,angleOffset)
 	%generate a hyperbolic orbit
-%	hypOrbit = fromHYP(marsFactory,24138.9,cirOrbit.rmin,0)
-%	hypOrbit = fromHYP(marsFactory,[241,241],cirOrbit.rmin,0)
+%	hypOrbit = fromHYP(marsFactory,24138.9,cirOrbit.rmin)
+	hypOrbit = fromHYP(marsFactory,[241,241],cirOrbit.rmin)
 
 	%generate mars orbit
 	marsOrbit = fromAE(sunFactory,227.92e6,0.0935,toRadians(336.05637041));
@@ -48,7 +48,7 @@ addpath('helper_functions');
 
 	%plot vernal equinox
 %	pointGraph(cirOrbit,vernalAngle,40);
-%	graph(hypOrbit);
+	graph(hypOrbit);
 	graph(marsSurface)
 	graph(cirOrbit);
 	print('marsApproach.pdf')
