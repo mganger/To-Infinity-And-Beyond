@@ -13,10 +13,10 @@ for i = 1:length(domain)
 end
 
 %make a polar plot of the semimajor axis
-xdomain = linspace(-1,1,10).*orbit.semiMajor;
+%xdomain = linspace(-1,1,10).*orbit.semiMajor;
 
 figure(figureNum)
 	hold on;
 	polar(domain,rad);
-	plot(xdomain, xdomain.*tan(orbit.refAngle));
+	%plot(xdomain, xdomain.*tan(orbit.refAngle));
 end
