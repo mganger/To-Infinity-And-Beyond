@@ -19,8 +19,11 @@ addpath('helper_functions');
 	sunFactory = OrbitFactory(1.98855e30,'Sun');
 	marsFactory = OrbitFactory(639e21,'Mars');
 
+	%args(factory,vinf,rmin,angleOffset)
+	hypOrbit = fromHYP(marsFactory,4828000,3500000,0)
+
 	%args(factory, semiMajorAxis, Eccentricity, angleToReference)
-	shipOrbit  = fromAE(marsFactory, 3500, 0, toRadians(336.05637041));
+	shipOrbit  = fromAE(marsFactory,3500000, 0, toRadians(336.05637041));
 	earthOrbit = fromAE(sunFactory, 149.60e6, 0.01671022, toRadians(102.93768193));
 	marsOrbit  = fromAE(sunFactory, 227.92e6, 0.0935, toRadians(336.05637041));
 
@@ -32,7 +35,9 @@ addpath('helper_functions');
 
 %	scatter(0,0,45,'filled')
 %	scatter(radiusAbs(earthOrbit,.3*pi)*cos(.3*pi),radiusAbs(earthOrbit,.3*pi)*sin(.3*pi),40);
-	pointGraph(earthOrbit,.23*pi);
-	pointGraph(marsOrbit,.5*pi);
-	graph(earthOrbit);
-	graph(marsOrbit);
+%	pointGraph(earthOrbit,.23*pi);
+%	pointGraph(marsOrbit,.5*pi);
+%	hypOrbit.semiMajor = -1.82954*10.^2
+	hypOrbit.eccentricity
+	graph(hypOrbit);
+	raph(shipOrbit);
