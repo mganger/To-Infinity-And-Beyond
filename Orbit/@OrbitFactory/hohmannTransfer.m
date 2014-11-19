@@ -13,6 +13,11 @@ function ret = hohmannTransfer(orbit1,orbit2,omega)
 
 	ret.alpha = 2*rmax*rmin/(rmax+rmin);
 	ret.eccentricity = ((ret.alpha-rmin)/rmin);
-	ret.semiMajor = ret.alpha/(1-ret.eccentricity.^2)
+	ret.semiMajor = ret.alpha/(1-ret.eccentricity.^2);
 	ret.bigG = G;
+	if(orbit1.centerMass == orbit2.centerMass)
+		ret.centerMass = orbit1.centerMass
+	else
+		print = 'What are you even going around?'
+	end
 end
