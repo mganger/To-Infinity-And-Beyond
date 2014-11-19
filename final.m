@@ -49,6 +49,8 @@ printf('\n\n');
 	vels.toMarsArrival.vinf = velocity(EMorb, relAngle(EMmap.arrival.ref, EMorb));
 	vels.toMarsDepart.vinf  = velocity(EMorb, relAngle(EMmap.depart.ref, EMorb));
 
+	vels.toEarthDepart.vinf  = velocity(MEorb, relAngle(MEmap.depart.ref, MEorb));
+
 
 
 
@@ -90,26 +92,35 @@ printf('\n\n');
 	%match the surface speed
 	vels.marsSurface.surfSpeed = velocity(marsSurface, marsSurface.refAngle);
 	vels.marsSurface.touchDown = velocity(landingOrbit,landingOrbit.refAngle);
-	deltaV(5) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown );
 
 	%Calculate delta-V 
-	deltaV(6) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown );
+	deltaV(5) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown );
 
 	%do it in reverse
 	vels.marsSurface.liftOff = vels.marsSurface.touchDown;
 
 	%change in velocity to get off the surface of mars
-	deltaV(7) = norm(vels.marsSurface.liftOff - vels.marsSurface.surfSpeed);
+	deltaV(6) = norm(vels.marsSurface.liftOff - vels.marsSurface.surfSpeed);
 
 	%velocity change to get into lmo
 	vels.toEarthDepart.lmo = vels.toMarsArrival.peri.lmo;
-	deltaV(8) = norm(vels.toEarthDepart.lmo - vels.marsSurface.landingVel);
+	deltaV(7) = norm(vels.toEarthDepart.lmo - vels.marsSurface.landingVel);
+
+
+
+	%finally, get on the transfer orbit back to earth
+	%set up the hyperbolic orbit and get the velocities
+	finalMarsHyp = fromHYP(marsFactory, vels.toEarthDepart.vinf, LMO.rmin);
+	
+	%find the difference between the velocities
+	deltaV(8) = norm(vels.toEarthDepart.lmo - vels.toEarthDepart.vinf);
 
 	%match the speed needed to get back to mars (from hyperbolic)
 	vels.toEarthDepart.mars.hyp = velocity(MEorb, MEmap.depart.first);
 	departHypOrbit = fromHYP(marsFactory, vels.toEarthDepart.mars.hyp, LMO.rmin);
 
 
+	deltaV
 	figure(3,'visible','off');
 		graph(hyperbolicOrbit, 3);
 		graph(marsSurface, 3);
@@ -127,4 +138,3 @@ printf('\n\n');
 			%pointGraph(marsSurface,landingOrbit.refAngle,45,3)
 		print('mars.pdf');
 
-	deltaV
