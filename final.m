@@ -18,9 +18,11 @@ addpath('helper_functions');
 try timeInt(); catch end
 printf('\n\n');
 
-	%set up the sun factory
+	%Use the factory pattern to generate orbits around different bodies;
+	%a factory is a body that is orbited around
 	sunFactory = OrbitFactory(1.98855e30, 'Sun');
 	marsFactory = OrbitFactory(639e21,'Mars');
+	earthFactory = OrbitFactory(5.97219e24,'Earth');
 
 	%set up the orbits around the sun (using the factory pattern)
 	earthOrbit = fromAE(sunFactory, 149.60e9, 0.01671022, toRadians(102.93768193));
@@ -44,7 +46,22 @@ printf('\n\n');
 
 	%find velocities at different points in the trip
 	vels = struct;
-	vels.toMarsArrival.vinf = velocity(EMorb, EMmap.arrival.second);
+	vels.toMarsArrival.vinf = velocity(EMorb, relAngle(EMmap.arrival.ref, EMorb));
+	vels.toMarsDepart.vinf  = velocity(EMorb, relAngle(EMmap.depart.ref, EMorb));
+
+
+
+
+
+	%getting out of LEO to get to Mars
+	%                          rad from center of mass   eccentricty omega
+	LEO = fromAE(earthFactory, 6563e3,                   0,          0);
+	hypOrbFromEarth = fromHYP(earthFactory, vels.toMarsDepart.vinf, LEO.rmin);
+
+
+
+
+
 
 	%andrew's part:
 	%generate circularized LMO and begin tracking mars surface as an orbit
@@ -63,29 +80,28 @@ printf('\n\n');
 	vels.toMarsArrival.peri.lmo = velocity(LMO,hyperbolicOrbit.refAngle);
 
 	%change in velocity to exit the orbit
-	deltaV(3) = norm(vels.toMarsArrival.peri.lmo - vels.toMarsArrival.peri.lmo);
-
+	deltaV(3) = norm(vels.toMarsArrival.peri.hyp - vels.toMarsArrival.peri.lmo);
 	%change in velocity to land in the landing orbit (although it is not the surface speed)
 	vels.marsSurface.landingVel = velocity(landingOrbit,landingOrbit.refAngle+pi);
 	deltaV(4) = norm(vels.marsSurface.landingVel - vels.toMarsArrival.peri.lmo);
 
 	%match the surface speed
-	vels.marsSurface.surfSpeed = velocity(marsSurface, marsSurface.refAngle)
-	vels.marsSurface.touchDown = velocity(landingOrbit,landingOrbit.refAngle)
+	vels.marsSurface.surfSpeed = velocity(marsSurface, marsSurface.refAngle);
+	vels.marsSurface.touchDown = velocity(landingOrbit,landingOrbit.refAngle);
 	deltaV(5) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown );
 
 	%Calculate delta-V 
-	deltaV(6) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown )
+	deltaV(6) = norm(vels.marsSurface.surfSpeed - vels.marsSurface.touchDown );
 
 	%do it in reverse
 	vels.marsSurface.liftOff = vels.marsSurface.touchDown;
 
 	%change in velocity to get off the surface of mars
-	deltaV(7) = norm(vels.marsSurface.liftOff - vels.marsSurface.surfSpeed)
+	deltaV(7) = norm(vels.marsSurface.liftOff - vels.marsSurface.surfSpeed);
 
 	%velocity change to get into lmo
 	vels.toEarthDepart.lmo = vels.toMarsArrival.peri.lmo;
-	deltaV(8) = norm(vels.toEarthDepart.lmo - vels.marsSurface.landingVel)
+	deltaV(8) = norm(vels.toEarthDepart.lmo - vels.marsSurface.landingVel);
 
 	%match the speed needed to get back to mars (from hyperbolic)
 	vels.toEarthDepart.mars.hyp = velocity(MEorb, MEmap.depart.first);
@@ -108,3 +124,5 @@ printf('\n\n');
 		%Intersection betwteen landing orbit and mars surface
 			%pointGraph(marsSurface,landingOrbit.refAngle,45,3)
 		print('mars.pdf');
+
+	deltaV
