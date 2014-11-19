@@ -11,7 +11,7 @@ addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
 
 %declare vinf until we can receive it from another obit
-vinf = [129380,19341]
+vinf = [0,30000]
 
 	%create a Sun Factory for the hyperbolic orbit
 	%create a Mars Factory for the circularized LMO
