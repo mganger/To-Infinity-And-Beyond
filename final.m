@@ -57,6 +57,8 @@ printf('\n\n');
 	%                          rad from center of mass   eccentricty omega
 	LEO = fromAE(earthFactory, 6563e3,                   0,          0);
 	hypOrbFromEarth = fromHYP(earthFactory, vels.toMarsDepart.vinf, LEO.rmin);
+	leoVelocity = velocity(LEO, 0);
+	deltaV(2) = norm(vels.toMarsDepart.vinf - leoVelocity)
 
 
 
