@@ -45,7 +45,6 @@ vinf = [129380,19341]
 	deltaV(1) = deltaVLMO;
 
 
-
 	%Calculate the velocities at overlapping points in LMO and landing orbit
 %	LMOvelocity = velocity(LMO,hyperbolicOrbit.refAngle)
 	landingVelocity = velocity(landingOrbit,landingOrbit.refAngle+pi)
@@ -67,8 +66,32 @@ vinf = [129380,19341]
 	deltaVtouchdown = norm(marsSurfaceVelocity - touchdownVelocity)
 	deltaV(3) = deltaVtouchdown;
 	
-printf("Total deltaVs are: %f\n",deltaV)
-sum(deltaV)
+	liftOffVelocity = touchdownVelocity;
+
+	%Prepare to lift off
+	printf("delta-V (1) = %f\n", liftOffVelocity(1) - marsSurfaceVelocity(1) )
+	printf("delta-V (2) = %f\n", liftOffVelocity(2) - marsSurfaceVelocity(2) )
+	deltaVliftOff = norm(liftOffVelocity - marsSurfaceVelocity)
+
+	deltaV(4) = deltaVliftOff;
+
+	%Calculate delta-V to re-enter LMO
+	printf("delta-V (1) = %f\n", LMOvelocity(1) - landingVelocity(1))
+	printf("delta-V (2) = %f\n", LMOvelocity(2) - landingVelocity(2))
+	deltaVLandingOrbit = norm(LMOvelocity - landingVelocity)
+	deltaV(5) = deltaVLandingOrbit;
+
+
+	%Calculate delta-V to return to Earth
+	%need a vinf-final to calculate
+%	printf("delta-V (1) = %f\n", LMOvelocity(1) - landingVelocity(1))
+%	printf("delta-V (2) = %f\n", LMOvelocity(2) - landingVelocity(2))
+%	deltaVLandingOrbit = norm(LMOvelocity - landingVelocity)
+%	deltaV(6) = deltaVLandingOrbit;
+
+
+%printf("Total deltaVs are: %f\n",deltaV)
+printf("Total deltaVs are: %f",sum(deltaV))
 
 	%graphs each orbit
 figure(1,'visible','off');
