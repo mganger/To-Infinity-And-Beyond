@@ -28,17 +28,17 @@ printf('\n\n');
 	earthPeri = datenum(2014,12,12);
 	marsPeri  = datenum(2015,01,04);
 
-	thetaD = 18.1*pi;
-	thetaA = 18.8*pi;
+	thetaD = 78.023397;
+	thetaA = 78.910909;
 	[EMorb, EMmap, EMreqTime, EMestTime] = transferArc(sunFactory, earthOrbit, earthPeri, marsOrbit, marsPeri, thetaD, thetaA, 'graph.pdf', quiet=1, plot=1);
-	exit;
 
 	%spin mars 30 days into the future
 	marsDepart = angSolve(marsOrbit, EMmap.arrival.second, 30*3600*24);
 	while(marsDepart <= thetaA) marsDepart += 2*pi; end;
 	thetaD1 = marsDepart;
-	thetaA1 = marsDepart + 0.7*pi;
-	[MEorb, MEmap, MEreqTime, MEestTime] = transferArc(sunFactory, marsOrbit, marsPeri, earthOrbit, earthPeri, marsDepart, marsDepart + .7*pi, 'graph2.pdf', quiet=1, plot=1);
+	thetaA1 = 80.992893;
+	[MEorb, MEmap, MEreqTime, MEestTime] = transferArc(sunFactory, marsOrbit, marsPeri, earthOrbit, earthPeri, marsDepart, thetaA1, 'graph2.pdf', quiet=1, plot=1);
 
 
 	printf('t1=%f,t2=%f,thetaD=%f,thetaA=%f,thetaD2=%f,thetaA2=%f\n', EMreqTime, MEreqTime, thetaD, thetaA, thetaD1, thetaA1);
+	printf('Depart Date: %s\n', datestr(earthPeri + EMmap.depart.time/24/3600));
