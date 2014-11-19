@@ -6,20 +6,22 @@ function transOrb, map, reqTime, transTime = transferArc(factory, orbit1, perTim
 	%periapsis of second minus periapsis of first, in seconds
 	periTimeDiff = (perTime1 - perTime2)*24*3600;
 	%angle of.second in its orbit at t = 0
-	map.init.time = 0;
+	map.init.time =  0;
 	map.init.first = 0;
 	map.init.second = angSolve(orbit2, 0, periTimeDiff);
 
 
 	%arrival and departure angles (user inputed)
 	while(thetaD < orbit1.refAngle) thetaD += 2*pi; end;
-	while(thetaA < thetaD) thetaA += 2*pi; end;
-	map.depart.ref = thetaD;
+	while(thetaA < thetaD)          thetaA += 2*pi; end;
+	map.depart.ref  = thetaD;
 	map.arrival.ref = thetaA;
+	printf('thetaD: %f\n',  thetaD);
+	printf('thetaA: %f\n', thetaA);
 
 
 	%find the eqivalent.first and.second angles for above reference angles
-	map.depart.first = relAngle(thetaD, orbit1);
+	map.depart.first =   relAngle(thetaD, orbit1);
 	map.arrival.second = relAngle(thetaA, orbit2);
 
 	%find the time that the.first is at the desired depart angle
@@ -29,17 +31,23 @@ function transOrb, map, reqTime, transTime = transferArc(factory, orbit1, perTim
 	%make sure that the arrival angle is greater than the departure angle
 	map.depart.second = angSolve(orbit2, map.init.second, map.depart.time);
 	while(map.arrival.second < map.depart.second) map.arrival.second += 2*pi; end;
+	while((map.arrival.second - map.depart.second) > 2*pi) map.depart.second += 2*pi; end;
 
 	%find the amount of time for.second to orbit between the two points
 	map.arrival.time = map.depart.time + timeDiff(orbit2, map.depart.second, map.arrival.second);
 
-	%find.first's location at the when the ship arrives at.second
+	printf('depart: %f\n',  map.depart.second);
+	printf('arrival: %f\n', map.arrival.second);
+	printf('Angle Difference: %f\n', map.arrival.second - map.depart.second);
+
+	%find first's location at the when the ship arrives at second
 	map.arrival.first = angSolve(orbit1, 0, map.arrival.time);
 
 
 	%construct a transfer orbit from the two known coordinates (r,theta) for the intial.first and the final.second
 	%just a system of equations from the first function
 	reqTime = tDiff = map.arrival.time - map.depart.time;
+	printf('Time Difference: %f\n', tDiff/3600/24);
 	ci = [radiusAbs(orbit1, map.depart.ref),  map.depart.ref];
 	cf = [radiusAbs(orbit2,  map.arrival.ref), map.arrival.ref];
 	[transOrb, transTime] = fromPolarRef(factory, tDiff, ci, cf);
@@ -50,7 +58,6 @@ function transOrb, map, reqTime, transTime = transferArc(factory, orbit1, perTim
 		figure(plot, 'visible', 'off')
 			%second and first location at departure
 			pointGraphRel(orbit1, map.depart.first, 10);
-			map
 			pointGraphRel(orbit2,  map.depart.second, 10);
 
 			%second and first location at arrival
