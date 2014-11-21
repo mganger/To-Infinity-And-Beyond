@@ -14,6 +14,7 @@ options = optimset('TolFun',1e-8,'TolX',1e-15,'MaxIter',1000);
 addpath('Orbit/@Orbit');
 addpath('Orbit/@OrbitFactory');
 addpath('helper_functions');
+addpath('graphing');
 
 try timeInt(); catch end
 printf('\n\n');

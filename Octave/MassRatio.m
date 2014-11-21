@@ -1,8 +1,18 @@
 %This is a linear script to calculate the amount of initial mass needed to
 %reach mars. Values must be explicitly specified inline.
+
+%The reason that the initial mass is so ridiculous is directly related to the
+%first and second change in velocity. If we change dv2 by an order of
+%magnitude, we can reduce the initial mass by multiple orders of magnitude.
+%This means that, by choosing a more efficient path, we can reduce the number
+%of rockets we need to get to low earth orbit.
 clear all; close all;
 
-mfinal=10112+(1.9824*346);
+function m0 = mass(m1, dv, isp)
+	m0 = m1 * exp(dv / (isp * 9.81));
+end
+
+mfinal=10112+60+209+34.02 + 686
 mJ2X=5000;
 monmars=0
 mRS25=12708;
@@ -25,6 +35,6 @@ RS25=452;
 SRB=269;
 g=9.81;
 
-%minitial=(mfinal+mJ2X+monmars+mRS25+mSRB)*exp((dv8/(J2X*g))+(dv7/(J2X*g))+(dv6/(J2X*g))...
 minitial=(mfinal+mJ2X+monmars+mRS25)*exp((dv8/(J2X*g))+(dv7/(J2X*g))+(dv6/(J2X*g))...
 +(dv5/(J2X*g))+(dv4/(J2X*g))+(dv3/(J2X*g))+(dv2/(RS25*g))+(dv1/(SRB*g)))
+
