@@ -1,3 +1,11 @@
+%This is the script that was used to calculate the Monte Carlo test to find the
+%most ideal transfers. It calculates orbits both to and from mars, and uses an
+%exact time of 30 days on the surface of mars to determine the angle of the
+%return trip. This script can find two transfers at a rate of about 3.5Hz on an
+%i5 processor (single thread). It is recommended to multiple scripts at the same
+%time (multi threading). The script for this is called multThread.sh.
+
+%
 %make sure you define these variables before calling this script:
 %thetaD			step1			step2			iterStep	thetaDEnd 	step1End	step2End	filename
 %depart from earth	increment to arrive	increment after depart	for loop steps
