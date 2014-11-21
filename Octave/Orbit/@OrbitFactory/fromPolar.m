@@ -1,5 +1,6 @@
 %function to construct an orbit from two polar coordinates (r,theta*)
 %does not provide a reference angle
+%NOT USED
 function orb = fromPolar(fact, ci, cf, refAng)
 	try refAng == 0; catch refAng = 0; end
 	r1 = ci(1), t1 = ci(2),
