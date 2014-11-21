@@ -69,8 +69,10 @@ printf('\n\n');
 
 	%andrew's part:
 	%generate circularized LMO and begin tracking mars surface as an orbit
+	%Track mars surface at 239.9 m/s
 	LMO = fromAE(marsFactory,3575000, 0, toRadians(336.05637041));
 	marsSurface = fromAE(marsFactory,3390000,0,toRadians(0));
+	marsSurface.vmin = 239.9;
 
 	%generate hyperbolic orbit
 	hyperbolicOrbit = fromHYP(marsFactory,vels.toMarsArrival.vinf,LMO.rmin);
@@ -90,7 +92,8 @@ printf('\n\n');
 	deltaV(4) = norm(vels.marsSurface.landingVel - vels.toMarsArrival.peri.lmo);
 
 	%match the surface speed
-	vels.marsSurface.surfSpeed = velocity(marsSurface, marsSurface.refAngle);
+	marsSurfaceSpeedsCalc='here'
+	vels.marsSurface.surfSpeed = [0,239.9]
 	vels.marsSurface.touchDown = velocity(landingOrbit,landingOrbit.refAngle);
 
 	%Calculate delta-V 
