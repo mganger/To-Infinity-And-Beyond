@@ -1,6 +1,7 @@
 %Information about rocket
 %Currently using the Space Launch System
-
+%Information was not used in our calculations
+%These same numbers were used explicitly in the calculations in MassRatio.m 
 
 
 function payload= getPayload
