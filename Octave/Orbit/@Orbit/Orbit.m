@@ -1,3 +1,6 @@
+%Generic constructor for an orbit. However, given the type-looseness of octave,
+%it is not actually necessary; only convenient. Note that the object must have
+%a bigG defined
 function obj = Orbit(a,e,w,m,name)
 	obj.massName = name;
 	obj.bigG = 6.6738480e-11;
