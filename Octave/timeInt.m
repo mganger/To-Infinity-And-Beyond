@@ -1,3 +1,12 @@
+%This function represents an analytical solution for the amount of time it takes
+%a body in orbit to move between two angles. Because of the tangent function, it
+%is cyclic and discontinuous. However, we can solve this problem through a few
+%changes. First, the function is undefined for parabolic eccentricities. We can
+%solve this problem by simply returning a time integral of a very slightly
+%hyperbolic orbit. Second, the function is undefined at multiples of pi radians,
+%so we must apply the same logic here. Finally, because the function is cyclic,
+%we must manually sum the iterations (essentially adding the time period of the
+%orbit)
 function ret = timeInt(y,x)
 
 	if(x == 1)

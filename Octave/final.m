@@ -33,18 +33,28 @@ printf('\n\n');
 	marsPeri  = datenum(2015,01,04);
 
 
+	%Set the departure and arrival angles for the transfer orbit from earth
+	%to mars (in radians). If the angles are greater than 2pi, it means
+	%that we are leaving in the future
 	thetaD = 78.023397;
 	thetaA = 78.910909;
+
+	%get the transfer orbit from earth to mars, the amount of time that it
+	%will take, and a map of the different positions at different times in
+	%the orbit. These are used to determine the velocity changes that our
+	%spacecraft must undergo.
 	[EMorb, EMmap, EMreqTime, EMestTime] = transferArc(sunFactory, earthOrbit, earthPeri, marsOrbit, marsPeri, thetaD, thetaA, 'graph.pdf', quiet=1, plot=1);
 
-	%spin mars 30 days into the future
+	%Spin mars 30 days into the future.  This is to account for the length
+	%of time that we intend to stay on mars. In seconds.
 	marsDepart = angSolve(marsOrbit, EMmap.arrival.second, 30*3600*24);
 	while(marsDepart <= thetaA) marsDepart += 2*pi; end;
 	thetaD1 = marsDepart;
 	thetaA1 = 80.992893;
 	[MEorb, MEmap, MEreqTime, MEestTime] = transferArc(sunFactory, marsOrbit, marsPeri, earthOrbit, earthPeri, marsDepart, thetaA1, 'graph2.pdf', quiet=1, plot=1);
 
-	%find velocities at different points in the trip
+	%Find velocities at different points in the trip, and put them in a
+	%struct to keep track of them
 	vels = struct;
 	vels.toMarsArrival.vinf = velocity(EMorb, relAngle(EMmap.arrival.ref, EMorb));
 	vels.toMarsDepart.vinf  = velocity(EMorb, relAngle(EMmap.depart.ref, EMorb));
@@ -53,22 +63,25 @@ printf('\n\n');
 
 
 
+	%Now that we have the transfer orbits to and from mars, we can determine
+	%the differenct velocity changes that we need to undergo through the
+	%entire trip.  These will tell us the amount of initial mass that we
+	%need
 
 
-	%getting out of LEO to get to Mars
-	%                          rad from center of mass   eccentricty omega
-	LEO = fromAE(earthFactory, 6563e3,                   0,          0);
+	%Getting out of LEO to get to Mars
+	% orbit = fromAE(rad from center of mass, eccentricty, omega)
+	LEO = fromAE(earthFactory, 6563e3, 0, 0);
 	hypOrbFromEarth = fromHYP(earthFactory, vels.toMarsDepart.vinf, LEO.rmin);
 	leoVelocity = velocity(LEO, 0);
+
+	%Start constructing an array to hold the velocty changes. This is used
+	%to determine the reequired initial mass of the spacecraft.
 	deltaV(2) = norm(vels.toMarsDepart.vinf - leoVelocity)
 
 
-
-
-
-
-	%andrew's part:
-	%generate circularized LMO and begin tracking mars surface as an orbit
+	%Set up two orbits at mars; one in low earth orbit and the other at the
+	%surface. This will allow us to transfer between the two
 	LMO = fromAE(marsFactory,3575000, 0, toRadians(336.05637041));
 	marsSurface = fromAE(marsFactory,3390000,0,toRadians(0));
 

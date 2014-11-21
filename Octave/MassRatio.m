@@ -1,3 +1,5 @@
+%This is a linear script to calculate the amount of initial mass needed to
+%reach mars. Values must be explicitly specified inline.
 clear all; close all;
 
 mfinal=10112+(1.9824*346);
