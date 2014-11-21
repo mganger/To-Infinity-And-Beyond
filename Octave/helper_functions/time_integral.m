@@ -1,3 +1,6 @@
+%Calculates the time integral using numerical methods and the 'quad' function
+%DEPRICATED
+
 function delta_t = time_integral(GM,alpha,epsilon,omega,theta1,theta2)
 %Uses function "quad" to take the integral for the delta_t between two "true longitudes"
 %i.e., thetas are angles from the reference direction
