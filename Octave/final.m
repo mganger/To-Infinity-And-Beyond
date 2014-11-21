@@ -74,7 +74,7 @@ printf('\n\n');
 
 	%generate hyperbolic orbit
 	hyperbolicOrbit = fromHYP(marsFactory,vels.toMarsArrival.vinf,LMO.rmin);
-	hyperbolicOrbit.refAngle;
+	hyperbolicOrbit.refAngle-=.5;
 
 	%generate landing pattern
 	landingOrbit = hohmannTransfer(LMO,marsSurface,pi/2);
@@ -122,10 +122,11 @@ printf('\n\n');
 
 	deltaV
 	figure(3,'visible','off');
-		graph(hyperbolicOrbit, 3);
-		graph(marsSurface, 3);
-		graph(landingOrbit, 3);
-		graph(LMO, 3);
+		graph(hyperbolicOrbit, hyperbolicOrbit.refAngle, 3*pi/4, 3);
+		graph(marsSurface, 0, 2*pi, 3);
+		graph(landingOrbit,0, 2*pi, 3);
+		graph(LMO, 0, 2*pi, 3);
+		axis([-7e6,7e6,-7e6,7e6]);
 
 		%reference points on plot
 		%Intersection between LMO and hyperbolic entry orbit
@@ -137,4 +138,10 @@ printf('\n\n');
 		%Intersection betwteen landing orbit and mars surface
 			%pointGraph(marsSurface,landingOrbit.refAngle,45,3)
 		print('mars.pdf');
+
+	printf('Depart Date: %s', datestr(earthPeri + EMmap.depart.time/3600/24));
+	printf('Arrival Date: %s', datestr(earthPeri + EMmap.arrival.time/3600/24));
+	printf('Depart Date: %s', datestr(earthPeri + MEmap.depart.time/3600/24));
+	printf('Arrival Date: %s', datestr(earthPeri + MEmap.arrival.time/3600/24));
+	printf('%f', MEestTime/3600/24);
 
