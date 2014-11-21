@@ -103,7 +103,8 @@ printf('\n\n');
 	deltaV(4) = norm(vels.marsSurface.landingVel - vels.toMarsArrival.peri.lmo);
 
 	%match the surface speed
-	vels.marsSurface.surfSpeed = velocity(marsSurface, marsSurface.refAngle);
+	marsSurfaceSpeedsCalc='here'
+	vels.marsSurface.surfSpeed = [0,239.9]
 	vels.marsSurface.touchDown = velocity(landingOrbit,landingOrbit.refAngle);
 
 	%Calculate delta-V 
