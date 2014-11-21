@@ -1,3 +1,4 @@
+%Generates a hyperbolic orbit basd on the velocity the orbiting body has at an 'infinite' distance and the minimum radius
 function o = fromHYP(obj,vinf,rmin)
 	G = 6.6738480e-11;
 

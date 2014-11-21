@@ -1,3 +1,5 @@
+%Calculates a Hohmann Transfer between two circular orbits given an angle of periapsis
+%This function makes assumptions based on circular orbits and is designed to calculate mars surface transfer orbitals
 function ret = hohmannTransfer(orbit1,orbit2,omega)
 	try omega == 2;
 		ret.refAngle = omega;
