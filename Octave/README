@@ -1,0 +1,48 @@
+This collection of files is relevant to the creation of transfer orbits
+Copyright (C) 2014  Heidi Kroening, Andrew Redman, Michael Ganger
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+Mars Mission
+============
+
+This is the code developed to compute trajectories to and from Mars from earth;
+it also finds the trajectories required to land on the surface of mars.
+
+In this folder, there are two self-sufficient programs: "final.m" and
+"iterate.m".
+
+final.m
+=======
+Holds the main code, and can find the trajectories between two points. It takes
+no command line arguments, so the angle of departure and arrival and both to and
+from earth must be explicitly provided in the code itself. It also finds the
+change in velocities needed to achieve the transfer orbits. These can then be
+used in "massRatio.m" to find the initial mass of the spacecraft departing from
+low earth orbit.
+
+massRatio.m
+===========
+This file also takes no arguments; it takes the different changes in velocity
+for each portion of the orbit and the final mass expected to have at the end of
+the trip (as well as the masses of different rockets), and returns the initial
+mass.
+
+iterate.m
+=========
+This is a modification of final.m that can be used to calculate random
+different transfer orbits from a range of arrival and departure angles. It does
+require that arguments be supplied from the command line. See multiThread.sh for
+the method of doing so.
